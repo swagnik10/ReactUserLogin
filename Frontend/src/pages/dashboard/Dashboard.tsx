@@ -1,35 +1,41 @@
-import { useNavigate } from "react-router-dom";
-
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { logout } from "../../features/auth/authSlice";
+import { useAppSelector } from "../../app/hooks";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/signin");
-  };
+  const user = useAppSelector(
+    (state) => state.auth.user
+  );
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+    <div>
+      <h1 className="text-3xl font-bold">
+        Welcome {user?.firstName}
+      </h1>
 
-      <div className="mt-4">
-        <p>Name: {user?.firstName}</p>
-        <p>Email: {user?.email}</p>
-        <p>Role: {user?.role}</p>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="rounded-lg bg-white p-4 shadow">
+          <h2 className="font-semibold">
+            Profile
+          </h2>
+
+          <p>{user?.email}</p>
+        </div>
+
+        <div className="rounded-lg bg-white p-4 shadow">
+          <h2 className="font-semibold">
+            Username
+          </h2>
+
+          <p>{user?.username}</p>
+        </div>
+
+        <div className="rounded-lg bg-white p-4 shadow">
+          <h2 className="font-semibold">
+            Role
+          </h2>
+
+          <p>{user?.role}</p>
+        </div>
       </div>
-
-      <button
-        onClick={handleLogout}
-        className="mt-4 px-4 py-2 rounded bg-red-600 text-white"
-      >
-        Logout
-      </button>
     </div>
   );
 };

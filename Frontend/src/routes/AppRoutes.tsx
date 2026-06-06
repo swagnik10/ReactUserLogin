@@ -9,6 +9,12 @@ import UserDetails from "../pages/user/UserDetails";
 
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
+import UserManagement from "../pages/admin/UserManagement";
+import MainLayout from "../layouts/MainLayout";
+import AdminLayout from "../layouts/AdminLayout";
+import NotFound from "../pages/notfound/NotFound";
+import Settings from "../pages/admin/Settings";
+import Roles from "../pages/admin/Roles";
 
 const AppRoutes = () => {
   return (
@@ -21,16 +27,25 @@ const AppRoutes = () => {
 
       {/* Protected */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<MainLayout />}>
+          <Route
+            path="/dashboard" element={<Dashboard />}
+          />
+        </Route>
       </Route>
 
       {/* Admin */}
       <Route element={<AdminRoute />}>
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/user/:id" element={<UserDetails />} />
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+          <Route path="/admin/roles" element={<Roles />} />
+          <Route path="/admin/settings" element={<Settings />} />
+          <Route path="/user/:id" element={<UserDetails />} />
+        </Route>
       </Route>
 
-      <Route path="*" element={<div>404 - Page Not Found</div>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

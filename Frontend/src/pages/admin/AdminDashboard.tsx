@@ -1,48 +1,24 @@
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
-import { useAppDispatch } from "../../app/hooks";
-import { logout } from "../../features/auth/authSlice";
+import { ROUTE_PATHS } from "../../routes/routePaths";
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
-
-  const dispatch = useAppDispatch();
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/signin");
-  };
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+      <div className="p-6">
+        <h1 className="text-2xl font-bold">
+          Admin Dashboard
+        </h1>
 
-      <div className="mt-6 flex flex-col gap-2">
-        <Link
-          to="/user/101"
-          className="text-blue-600 underline"
-        >
-          View User 101
-          
-        </Link>
-
-        <Link
-          to="/user/202"
-          className="text-blue-600 underline"
-        >
-          View User 202
-        </Link>
-
-        
+        <div className="mt-6">
+          <Link
+            to={ROUTE_PATHS.ADMIN_USERS}
+            className="rounded bg-blue-600 px-4 py-2 text-white"
+          >
+            Manage Users
+          </Link>
+        </div>
       </div>
-
-      <button
-        onClick={handleLogout}
-        className="mt-4 px-4 py-2 rounded bg-red-600 text-white"
-      >
-        Logout
-      </button>
     </div>
   );
 };

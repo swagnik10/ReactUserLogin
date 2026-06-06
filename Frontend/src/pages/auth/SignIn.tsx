@@ -8,7 +8,12 @@ import Card from "../../components/ui/Card";
 import { useAppDispatch } from "../../app/hooks";
 import { loginSuccess } from "../../features/auth/authSlice";
 
-import { isValidEmail } from "../../utils/validators";
+import { isValidEmail, isValidPassword } from "../../utils/validators";
+import AuthLayout from "../../layouts/AuthLayout";
+import { saveUser } from "../../features/auth/authStorage";
+import type { UserRole } from "../../features/auth/types";
+import { ROUTE_PATHS } from "../../routes/routePaths";
+import { toast } from "sonner";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -22,35 +27,42 @@ const SignIn = () => {
   const handleSubmit = () => {
     setError("");
 
-    if (!isValidEmail(email)) {
-      setError("Please enter a valid email.");
+    if (!isValidEmail(email.trim())) {
+      toast.error("Please enter a valid email.");
       return;
     }
 
-    if (!password) {
-      setError("Password is required.");
+    if (!isValidPassword(password.trim())) {
+      toast.error("Password must be at least 6 characters.");
       return;
     }
 
-    dispatch(
-      loginSuccess({
-        id: "1",
-        firstName: "Swagnik",
-        lastName: "Roy",
-        username: "swagnik",
-        email,
-        role: "user",
-      })
-    );
+    const user = {
+      id: "1",
+      firstName: "Swagnik",
+      lastName: "Ghosh",
+      username: "swagnik10",
+      email,
+      role: "Admin" as UserRole
+    };
 
-    navigate("/dashboard");
+    saveUser(user);
+
+    dispatch(loginSuccess({ user, token: null }));
+    
+    if (user.role === "Admin") {
+      navigate(ROUTE_PATHS.ADMIN);
+    } else {
+      navigate(ROUTE_PATHS.DASHBOARD);
+    }
+    toast.success("Login successful");
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+    <AuthLayout>
       <Card>
         <h1 className="mb-6 text-center text-2xl font-bold">
-          Sign In
+          Good to See You
         </h1>
 
         <div className="space-y-4">
@@ -85,7 +97,7 @@ const SignIn = () => {
           <p className="text-center text-sm">
             Don't have an account?{" "}
             <Link
-              to="/signup"
+              to={ROUTE_PATHS.SIGN_UP}
               className="text-blue-600"
             >
               Create Account
@@ -93,7 +105,7 @@ const SignIn = () => {
           </p>
         </div>
       </Card>
-    </div>
+    </AuthLayout>
   );
 };
 

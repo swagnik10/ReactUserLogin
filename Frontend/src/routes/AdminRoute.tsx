@@ -8,7 +8,7 @@ const AdminRoute = () => {
     return <Navigate to="/signin" replace />;
   }
 
-  return user.role === "admin" ? (
+  return user.role === "Admin" ? (
     <Outlet />
   ) : (
     <Navigate to="/dashboard" replace />
