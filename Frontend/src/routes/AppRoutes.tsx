@@ -2,30 +2,34 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import SignIn from "../pages/auth/SignIn";
 import SignUp from "../pages/auth/SignUp";
+
 import Dashboard from "../pages/dashboard/Dashboard";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import UserDetails from "../pages/user/UserDetails";
 
-import { ROUTE_PATHS } from "./routePaths";
+import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Default route → redirect to signin */}
-      <Route path="/" element={<Navigate to={ROUTE_PATHS.SIGN_IN} replace />} />
+      <Route path="/" element={<Navigate to="/signin" replace />} />
 
-      {/* Auth routes */}
-      <Route path={ROUTE_PATHS.SIGN_IN} element={<SignIn />} />
-      <Route path={ROUTE_PATHS.SIGN_UP} element={<SignUp />} />
+      {/* Public */}
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
 
-      {/* App routes */}
-      <Route path={ROUTE_PATHS.DASHBOARD} element={<Dashboard />} />
-      <Route path={ROUTE_PATHS.ADMIN} element={<AdminDashboard />} />
+      {/* Protected */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
 
-      {/* Dynamic route */}
-      <Route path={ROUTE_PATHS.USER_DETAILS} element={<UserDetails />} />
+      {/* Admin */}
+      <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/user/:id" element={<UserDetails />} />
+      </Route>
 
-      {/* fallback */}
       <Route path="*" element={<div>404 - Page Not Found</div>} />
     </Routes>
   );
