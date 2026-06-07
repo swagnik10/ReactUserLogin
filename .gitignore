@@ -22,3 +22,30 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Visual Studio cache/options directory
+.vs/
+bin/
+obj/
+
+# ASP.NET Core
+appsettings.Development.json
+*.csproj.user
+
+# Logs
+*.log
+
+# NuGet
+*.nupkg
+*.snupkg
+
+# Packages
+packages/
+!packages/build/
+
+.github
+
+# docker-compose env file
+
+docker-compose.env
