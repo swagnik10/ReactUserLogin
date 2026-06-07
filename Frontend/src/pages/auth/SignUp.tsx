@@ -23,11 +23,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [error, setError] = useState("");
-
   const handleSubmit = () => {
-    setError("");
-
     if (!firstName.trim()) {
       toast.error("First name is required");
       return;
@@ -97,12 +93,8 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
-          {error && (
-            <p className="text-sm text-red-500">{error}</p>
-          )}
-
-          <Button onClick={handleSubmit}>
+          
+          <Button onClick={handleSubmit} fullWidth>
             Create Account
           </Button>
 

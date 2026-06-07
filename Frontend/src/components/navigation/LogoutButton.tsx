@@ -4,6 +4,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { logout } from "../../features/auth/authSlice";
 import { clearStoredUser } from "../../features/auth/authStorage";
 import { ROUTE_PATHS } from "../../routes/routePaths";
+import Button from "../ui/Button";
 
 const LogoutButton = () => {
   const dispatch = useAppDispatch();
@@ -18,12 +19,9 @@ const LogoutButton = () => {
   };
 
   return (
-    <button
-      onClick={handleLogout}
-      className="rounded-md bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
-    >
+    <Button variant="danger" onClick={handleLogout}>
       Logout
-    </button>
+    </Button>
   );
 };
 

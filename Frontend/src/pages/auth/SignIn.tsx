@@ -22,10 +22,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [error, setError] = useState("");
-
   const handleSubmit = () => {
-    setError("");
 
     if (!isValidEmail(email.trim())) {
       toast.error("Please enter a valid email.");
@@ -84,13 +81,7 @@ const SignIn = () => {
             }
           />
 
-          {error && (
-            <p className="text-red-500">
-              {error}
-            </p>
-          )}
-
-          <Button onClick={handleSubmit}>
+          <Button onClick={handleSubmit} fullWidth>
             Sign In
           </Button>
 
