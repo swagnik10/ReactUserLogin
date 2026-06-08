@@ -1,6 +1,6 @@
 ﻿namespace Backend.DTOs.Auth;
 
-public class LoginRequest
+public class LoginBody
 {
     public string Email { get; set; }
 

@@ -4,7 +4,7 @@ using Backend.Repositories;
 using FluentValidation;
 using MediatR;
 
-namespace Backend.Application.Handlers;
+namespace Backend.Application.Handlers.UsersHandler;
 
 public class GetUserByIdHandler : IRequestHandler<GetUserByIdRequest, UserDetailsDto>
 {
@@ -12,7 +12,7 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdRequest, UserDetail
     private readonly IValidator<GetUserByIdRequest> _validator;
     private readonly ILogger<GetUserByIdHandler> _logger;
 
-    public GetUserByIdHandler(IUserRepository userRepository, 
+    public GetUserByIdHandler(IUserRepository userRepository,
                               ILogger<GetUserByIdHandler> logger,
                               IValidator<GetUserByIdRequest> validator)
     {

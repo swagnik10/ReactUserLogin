@@ -1,6 +1,5 @@
 ﻿using Backend.Application.CommandAndQuery;
 using Backend.DTOs.Users;
-using Backend.Service;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +16,7 @@ namespace Backend.Controllers
         private readonly ILogger<UsersController> _logger;
         private readonly IMediator _mediator;
 
-        public UsersController(IUserService userService, ILogger<UsersController> logger,
+        public UsersController(ILogger<UsersController> logger,
           IMediator mediator)
         {
             _logger = logger;

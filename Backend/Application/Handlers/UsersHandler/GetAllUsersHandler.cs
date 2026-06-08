@@ -4,7 +4,7 @@ using Backend.Repositories;
 using FluentValidation;
 using MediatR;
 
-namespace Backend.Application.Handlers;
+namespace Backend.Application.Handlers.UsersHandler;
 
 public class GetAllUsersHandler : IRequestHandler<GetAllUsersRequest, List<UserDto>>
 {
@@ -58,7 +58,7 @@ public class GetAllUsersHandler : IRequestHandler<GetAllUsersRequest, List<UserD
         return result;
     }
 
-    private async Task Validate( GetAllUsersRequest request, CancellationToken cancellationToken)
+    private async Task Validate(GetAllUsersRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Validating GetAllUsersRequest");
 

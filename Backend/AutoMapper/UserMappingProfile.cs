@@ -9,7 +9,7 @@ public class UserMappingProfile : Profile
 {
     public UserMappingProfile()
     {
-        CreateMap<RegisterUserRequest, User>()
+        CreateMap<RegisterUserBody, User>()
             .ForMember(
                 dest => dest.CreatedAt,
                 opt => opt.MapFrom(_ => DateTime.Now))

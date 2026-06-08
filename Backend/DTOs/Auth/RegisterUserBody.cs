@@ -1,6 +1,6 @@
 ﻿namespace Backend.DTOs.Auth;
 
-public class RegisterUserRequest
+public class RegisterUserBody
 {
     public string Username { get; set; }
 

@@ -1,9 +1,9 @@
 ﻿using Backend.Application.CommandAndQuery;
 using FluentValidation;
 
-namespace Backend.Application.Validators;
+namespace Backend.Application.Validators.UsersValidator;
 
-public class GetUserByIdRequestValidator: AbstractValidator<GetUserByIdRequest>
+public class GetUserByIdRequestValidator : AbstractValidator<GetUserByIdRequest>
 {
     public GetUserByIdRequestValidator()
     {

@@ -4,6 +4,7 @@ using Backend.Repositories;
 using FluentValidation;
 using MediatR;
 
+namespace Backend.Application.Handlers.UsersHandler;
 public class UpdateUserByIdHandler : IRequestHandler<UpdateUserRequest>
 {
     private readonly IUserRepository _userRepository;

@@ -1,7 +1,7 @@
 ﻿using Backend.Application.CommandAndQuery;
 using FluentValidation;
 
-namespace Backend.Application.Validators;
+namespace Backend.Application.Validators.UsersValidator;
 
 public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
 {

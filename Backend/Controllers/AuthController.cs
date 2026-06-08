@@ -1,7 +1,7 @@
 ﻿using Backend.DTOs.Auth;
-using Backend.Service;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using static Backend.Application.CommandAndQuery.AuthRequests;
 
 namespace Backend.Controllers;
 
@@ -10,22 +10,22 @@ namespace Backend.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
-    private readonly IUserService _userService;
+    private readonly IMediator _mediator;
 
     public AuthController(ILogger<AuthController> logger,
-        IUserService userService)
+                         IMediator mediator)
     {
         _logger = logger;
-        _userService = userService;
+        _mediator = mediator;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUserRequest request)
+    public async Task<IActionResult> Register(RegisterUserBody request)
     {
         try
         {
             _logger.LogInformation("Registering user with username: {Username}", request.Username);
-            await _userService.RegisterAsync(request);
+            await _mediator.Send(new RegisterUserRequest(request));
 
             return Ok(new
             {
@@ -43,12 +43,12 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginBody request)
     {
         try
         {
             _logger.LogInformation("Attempting login for email: {Email} and Password: {Password}", request.Email, request.Password);
-            var response = await _userService.LoginAsync(request);
+            var response = await _mediator.Send(new LoginRequest(request));
 
             return Ok(response);
         }
@@ -61,12 +61,4 @@ public class AuthController : ControllerBase
         }
     }
 
-    [Authorize]
-    [HttpGet("me")]
-    public async Task<IActionResult> Me()
-    {
-        var result = await _userService.GetCurrentUserAsync(User);
-
-        return Ok(result);
-    }
 }
