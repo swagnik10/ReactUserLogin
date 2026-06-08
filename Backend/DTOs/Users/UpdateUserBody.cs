@@ -1,6 +1,6 @@
 ﻿namespace Backend.DTOs.Users;
 
-public class UpdateUserRequest
+public class UpdateUserBody
 {
     public string FirstName { get; set; }
 

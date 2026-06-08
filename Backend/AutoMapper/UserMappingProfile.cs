@@ -17,8 +17,8 @@ public class UserMappingProfile : Profile
                 dest => dest.IsActive,
                 opt => opt.MapFrom(_ => true));
 
-        CreateMap<User, UserResponse>();
+        CreateMap<User, UserDto>();
 
-        CreateMap<User, UserDetailsResponse>();
+        CreateMap<User, UserDetailsDto>();
     }
 }

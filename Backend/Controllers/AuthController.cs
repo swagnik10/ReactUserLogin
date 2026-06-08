@@ -20,14 +20,12 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(
-        RegisterUserRequest request)
+    public async Task<IActionResult> Register(RegisterUserRequest request)
     {
         try
         {
             _logger.LogInformation("Registering user with username: {Username}", request.Username);
-            await _userService.RegisterAsync(
-                request);
+            await _userService.RegisterAsync(request);
 
             return Ok(new
             {
@@ -45,15 +43,12 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(
-    LoginRequest request)
+    public async Task<IActionResult> Login(LoginRequest request)
     {
         try
         {
             _logger.LogInformation("Attempting login for email: {Email} and Password: {Password}", request.Email, request.Password);
-            var response =
-                await _userService.LoginAsync(
-                    request);
+            var response = await _userService.LoginAsync(request);
 
             return Ok(response);
         }
@@ -70,9 +65,7 @@ public class AuthController : ControllerBase
     [HttpGet("me")]
     public async Task<IActionResult> Me()
     {
-        var result =
-            await _userService
-                .GetCurrentUserAsync(User);
+        var result = await _userService.GetCurrentUserAsync(User);
 
         return Ok(result);
     }

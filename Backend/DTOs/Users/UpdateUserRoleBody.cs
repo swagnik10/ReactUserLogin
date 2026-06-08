@@ -1,6 +1,6 @@
 ﻿namespace Backend.DTOs.Users;
 
-public class UpdateUserRoleRequest
+public class UpdateUserRoleBody
 {
     public string RoleName { get; set; }
 }

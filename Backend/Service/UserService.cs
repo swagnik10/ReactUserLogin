@@ -85,8 +85,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<LoginResponse> LoginAsync(
-    LoginRequest request)
+    public async Task<LoginDto> LoginAsync(LoginRequest request)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email);
 
@@ -107,13 +106,12 @@ public class UserService : IUserService
 
         var role = await _userRepository.GetRoleNameByUserIdAsync(user.UserId);
 
-        var token =
-            _jwtTokenService.GenerateToken(
-                user.UserId,
-                user.Username,
-                role ?? "User");
+        var token = _jwtTokenService.GenerateToken(
+                                    user.UserId,
+                                    user.Username,
+                                    role ?? "User");
 
-        return new LoginResponse
+        return new LoginDto
         {
             Token = token,
             UserId = user.UserId,
@@ -154,17 +152,17 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<List<UserResponse>> GetAllUsersAsync()
+    public async Task<List<UserDto>> GetAllUsersAsync()
     {
         var users = await _userRepository.GetAllAsync();
 
-        var result = new List<UserResponse>();
+        var result = new List<UserDto>();
 
         foreach (var user in users)
         {
             var role = await _userRepository.GetRoleNameByUserIdAsync(user.UserId);
 
-            result.Add(new UserResponse
+            result.Add(new UserDto
             {
                 UserId = user.UserId,
                 Username = user.Username,
@@ -180,7 +178,7 @@ public class UserService : IUserService
         return result;
     }
 
-    public async Task<UserDetailsResponse> GetUserByIdAsync(int userId)
+    public async Task<UserDetailsDto> GetUserByIdAsync(int userId)
     {
         var user = await _userRepository.GetByUseIdAsync(userId);
 
@@ -192,7 +190,7 @@ public class UserService : IUserService
 
         var role = await _userRepository.GetRoleNameByUserIdAsync(user.UserId);
 
-        return new UserDetailsResponse
+        return new UserDetailsDto
         {
             UserId = user.UserId,
             Username = user.Username,
@@ -206,7 +204,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task UpdateUserAsync(int userId, UpdateUserRequest request)
+    public async Task UpdateUserAsync(int userId, UpdateUserBody request)
     {
         using var uow = _uowFactory.Create();
 
@@ -268,7 +266,7 @@ public class UserService : IUserService
 
     public async Task UpdateUserRoleAsync(
     int userId,
-    UpdateUserRoleRequest request)
+    UpdateUserRoleBody request)
     {
         using var uow = _uowFactory.Create();
 

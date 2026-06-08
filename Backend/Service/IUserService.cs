@@ -7,17 +7,17 @@ namespace Backend.Service;
 public interface IUserService
 {
     Task RegisterAsync(RegisterUserRequest request);
-    Task<LoginResponse> LoginAsync(LoginRequest request);
+    Task<LoginDto> LoginAsync(LoginRequest request);
 
     Task<CurrentUserResponse> GetCurrentUserAsync(ClaimsPrincipal principal);
 
-    Task<List<UserResponse>> GetAllUsersAsync();
+    Task<List<UserDto>> GetAllUsersAsync();
 
-    Task<UserDetailsResponse> GetUserByIdAsync(int userId);
+    Task<UserDetailsDto> GetUserByIdAsync(int userId);
 
-    Task UpdateUserAsync(int userId, UpdateUserRequest request);
+    Task UpdateUserAsync(int userId, UpdateUserBody request);
 
     Task DeleteUserAsync(int userId);
 
-    Task UpdateUserRoleAsync(int userId, UpdateUserRoleRequest request);
+    Task UpdateUserRoleAsync(int userId, UpdateUserRoleBody request);
 }

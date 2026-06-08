@@ -3,6 +3,7 @@ using Backend.Mapper;
 using Backend.Repositories;
 using Backend.Secutity;
 using Backend.Service;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -84,6 +85,14 @@ builder.Services
                     new SymmetricSecurityKey(key)
             };
     });
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(
+        typeof(Program).Assembly);
+});
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 var app = builder.Build();
 

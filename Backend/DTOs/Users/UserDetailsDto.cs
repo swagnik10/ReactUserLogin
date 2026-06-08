@@ -1,6 +1,6 @@
 ﻿namespace Backend.DTOs.Users;
 
-public class UserDetailsResponse
+public class UserDetailsDto
 {
     public int UserId { get; set; }
 
