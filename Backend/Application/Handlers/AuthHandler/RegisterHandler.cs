@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Backend.DbConnection;
 using Backend.Domain;
-using Backend.DTOs.Auth;
 using Backend.Repositories;
 using Backend.Secutity;
 using FluentValidation;

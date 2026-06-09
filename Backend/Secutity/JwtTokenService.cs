@@ -8,14 +8,18 @@ namespace Backend.Secutity;
 public class JwtTokenService : IJwtTokenService
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<JwtTokenService> _logger;
 
-    public JwtTokenService(IConfiguration configuration)
+    public JwtTokenService(IConfiguration configuration, ILogger<JwtTokenService> logger)
     {
         _configuration = configuration;
+        _logger = logger;
     }
 
     public string GenerateToken(int userId, string userName, string role)
     {
+        _logger.LogInformation("Generating JWT token for user {UserName} with role {Role}", userName, role);
+
         var jwtSettings = _configuration.GetSection("Jwt");
         var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 

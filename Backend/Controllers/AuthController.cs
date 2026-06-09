@@ -22,43 +22,26 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserBody request)
     {
-        try
-        {
-            _logger.LogInformation("Registering user with username: {Username}", request.Username);
-            await _mediator.Send(new RegisterUserRequest(request));
 
-            return Ok(new
-            {
-                Message =
-                    "User registered successfully."
-            });
-        }
-        catch (Exception ex)
+        _logger.LogInformation("Registering user with username: {Username}", request.Username);
+        await _mediator.Send(new RegisterUserRequest(request));
+
+        return Ok(new
         {
-            return BadRequest(new
-            {
-                Message = ex.Message
-            });
-        }
+            Message =
+                "User registered successfully."
+        });
+        
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginBody request)
     {
-        try
-        {
-            _logger.LogInformation("Attempting login for email: {Email} and Password: {Password}", request.Email, request.Password);
-            var response = await _mediator.Send(new LoginRequest(request));
+        _logger.LogInformation("Attempting login for email: {Email} and Password: {Password}", request.Email, request.Password);
+        var response = await _mediator.Send(new LoginRequest(request));
 
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return Unauthorized(new
-            {
-                Message = ex.Message
-            });
-        }
+        return Ok(response);
+        
     }
 
 }

@@ -1,5 +1,4 @@
-﻿using Backend.Application.CommandAndQuery;
-using FluentValidation;
+﻿using FluentValidation;
 using static Backend.Application.CommandAndQuery.AuthRequests;
 
 namespace Backend.Application.Validators.AuthValidator;

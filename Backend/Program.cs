@@ -1,5 +1,6 @@
 using Backend.DbConnection;
 using Backend.Mapper;
+using Backend.Middlewares;
 using Backend.Repositories;
 using Backend.Secutity;
 using FluentValidation;
@@ -108,6 +109,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("ReactPolicy");
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 
