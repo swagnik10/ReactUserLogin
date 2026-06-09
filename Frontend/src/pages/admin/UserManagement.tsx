@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { getUsers } from "../../services/users/userService";
+import { deleteUser, getUsers } from "../../services/users/userService";
 import type { User } from "../../features/auth/types/user";
+import { toast } from "sonner";
 
 const UserManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -24,6 +25,36 @@ const UserManagement = () => {
 
     loadUsers();
   }, []);
+
+  const handleDelete = async (
+    userId: number
+  ) => {
+    const confirmed = window.confirm(
+      "Delete this user?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteUser(userId);
+
+      setUsers((prev) =>
+        prev.filter(
+          (user) => user.userId !== userId
+        )
+      );
+
+      toast.success(
+        "User deleted successfully"
+      );
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        "Failed to delete user"
+      );
+    }
+  };
 
 
   return (
@@ -67,6 +98,13 @@ const UserManagement = () => {
                       View
                     </Link>
                   </td>
+
+                  <button
+                    onClick={() => handleDelete(user.userId)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Delete
+                  </button>
                 </tr>
               ))}
             </tbody>

@@ -1,7 +1,7 @@
 import apiClient from "../apiClient";
 import type {
     User,
-    UserDetails,
+    UserInformation,
     UpdateUserRequest,
     UpdateUserRoleRequest
 } from "../../features/auth/types/user";
@@ -13,8 +13,8 @@ export const getUsers = async (): Promise<User[]> => {
 
 export const getUserById = async (
     id: number
-): Promise<UserDetails> => {
-    const response = await apiClient.get<UserDetails>(
+): Promise<UserInformation> => {
+    const response = await apiClient.get<UserInformation>(
         `/Users/${id}`
     );
 
@@ -22,21 +22,19 @@ export const getUserById = async (
 };
 
 export const updateUser = async (
-    id: number,
-    data: UpdateUserRequest
+  id: number,
+  data: UpdateUserRequest
 ): Promise<void> => {
-    await apiClient.put(
-        `/Users/${id}`,
-        data
-    );
+  await apiClient.put(
+    `/Users/${id}`,
+    data
+  );
 };
 
 export const deleteUser = async (
-    id: number
+  id: number
 ): Promise<void> => {
-    await apiClient.delete(
-        `/Users/${id}`
-    );
+  await apiClient.delete(`/Users/${id}`);
 };
 
 export const updateUserRole = async (
