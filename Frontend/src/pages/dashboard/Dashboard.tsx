@@ -17,7 +17,7 @@ const Dashboard = () => {
             Profile
           </h2>
 
-          <p>{user?.email}</p>
+          <p>{user?.emailId}</p>
         </div>
 
         <div className="rounded-lg bg-white p-4 shadow">

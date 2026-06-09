@@ -9,3 +9,7 @@ export const isValidPassword = (password: string) => {
 export const isValidUsername = (username: string) => {
   return username.trim().length >= 3;
 };
+
+export const isValidPhoneNumber = (phoneNumber: string) => {
+  return phoneNumber.trim().length === 10;
+};

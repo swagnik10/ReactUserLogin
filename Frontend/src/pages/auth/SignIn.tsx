@@ -11,9 +11,9 @@ import { loginSuccess } from "../../features/auth/authSlice";
 import { isValidEmail, isValidPassword } from "../../utils/validators";
 import AuthLayout from "../../layouts/AuthLayout";
 import { saveUser } from "../../features/auth/authStorage";
-import type { UserRole } from "../../features/auth/types";
 import { ROUTE_PATHS } from "../../routes/routePaths";
 import { toast } from "sonner";
+import { login } from "../../services/auth/authService";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -22,37 +22,47 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
-    if (!isValidEmail(email.trim())) {
-      toast.error("Please enter a valid email.");
-      return;
+    try {
+      if (!isValidEmail(email.trim())) {
+        toast.error("Please enter a valid email.");
+        return;
+      }
+      if (!isValidPassword(password.trim())) {
+        toast.error("Password must be at least 6 characters.");
+        return;
+      }
+      const response = await login({
+        email,
+        password,
+      });
+
+      const user = {
+        userId: response.userId,
+        username: response.username,
+        firstName: response.firstName,
+        lastName: response.lastName,
+        role: response.role,
+        emailId: response.emailId,
+      };
+
+      saveUser(user, response.token);
+
+      localStorage.setItem("token", response.token);
+
+      dispatch(loginSuccess(response));
+
+      if (response.role === "Admin") {
+        navigate(ROUTE_PATHS.ADMIN);
+      } else {
+        navigate(ROUTE_PATHS.DASHBOARD);
+      }
+
+      toast.success("Login successful");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Login failed");
     }
-
-    if (!isValidPassword(password.trim())) {
-      toast.error("Password must be at least 6 characters.");
-      return;
-    }
-
-    const user = {
-      id: "1",
-      firstName: "Swagnik",
-      lastName: "Ghosh",
-      username: "swagnik10",
-      email,
-      role: "Admin" as UserRole
-    };
-
-    saveUser(user);
-
-    dispatch(loginSuccess({ user, token: null }));
-    
-    if (user.role === "Admin") {
-      navigate(ROUTE_PATHS.ADMIN);
-    } else {
-      navigate(ROUTE_PATHS.DASHBOARD);
-    }
-    toast.success("Login successful");
   };
 
   return (

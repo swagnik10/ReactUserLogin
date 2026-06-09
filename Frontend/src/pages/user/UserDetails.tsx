@@ -1,14 +1,35 @@
 import { useParams } from "react-router-dom";
-import { mockUsers } from "../../data/mockUsers";
+import { useEffect, useState } from "react";
+import { getUserById } from "../../services/users/userService";
+import type { UserInformation } from "../../features/auth/types/user";
+
 
 const UserDetails = () => {
   const { id } = useParams();
-  const user = mockUsers.find(
-    (u) => u.id === id
-  );
+  const [user, setUser] = useState<UserInformation | null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        if (!id) return;
+
+        const data = await getUserById(Number(id));
+        setUser(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
+  }, [id]);
 
   if (!user) {
     return <div>User not found</div>;
+  }
+  if (loading) {
+    return <div>Loading user...</div>;
   }
 
   return (

@@ -62,7 +62,8 @@ public class LogInHandler : IRequestHandler<LoginRequest, LoginDto>
             Username = user.Username,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Role = role ?? "User"
+            Role = role ?? "User",
+            EmailId = user.Email
         };
     }
     private async Task Validate(LoginRequest request, CancellationToken cancellationToken)
