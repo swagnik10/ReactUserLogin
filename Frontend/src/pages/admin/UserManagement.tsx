@@ -78,34 +78,39 @@ const UserManagement = () => {
             <tbody>
               {users.map((user) => (
                 <tr key={user.userId}>
-                  <td className="border p-2">
+                  <td className="border p-2 text-center">
                     {user.username}
                   </td>
 
-                  <td className="border p-2">
+                  <td className="border p-2 text-center">
                     {user.email}
                   </td>
 
-                  <td className="border p-2">
+                  <td className="border p-2 text-center">
                     {user.role}
                   </td>
 
-                  <td className="border p-2">
-                    <Link
-                      to={`/user/${user.userId}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      View
-                    </Link>
-                  </td>
+                  <td className="border p-2 text-center">
+                    <div className="flex items-center justify-center gap-4">
+                      <Link
+                        to={`/user/${user.userId}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        View
+                      </Link>
 
-                  <button
-                    onClick={() => handleDelete(user.userId)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Delete
-                  </button>
+                      <span>|</span>
+
+                      <button
+                        onClick={() => handleDelete(user.userId)}
+                        className="text-red-600 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
                 </tr>
+
               ))}
             </tbody>
           </table>
