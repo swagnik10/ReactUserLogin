@@ -1,4 +1,5 @@
 services:
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: usermanagement-sql
@@ -12,8 +13,17 @@ services:
 
     volumes:
       - sqlserver_data:/var/opt/mssql
+  db-init:
+    build:
+      context: ./SQL
 
-    restart: unless-stopped
+    container_name: usermanagement-db-init
+
+    environment:
+      SA_PASSWORD: ${SA_PASSWORD}
+
+    depends_on:
+      - sqlserver
 
   backend:
     build:
@@ -21,6 +31,9 @@ services:
       dockerfile: Dockerfile
 
     container_name: usermanagement-api
+
+    depends_on:
+      - db-init
 
     ports:
       - "5000:8080"
@@ -34,10 +47,6 @@ services:
       Jwt__Issuer: ${JWT_ISSUER}
       Jwt__Audience: ${JWT_AUDIENCE}
 
-    depends_on:
-      - sqlserver
-
-    restart: unless-stopped
-
 volumes:
   sqlserver_data:
+    name: usermanagement-sql-data

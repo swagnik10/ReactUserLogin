@@ -13,4 +13,48 @@ we have created one .env file for storing sql db password & jwt key but we are n
 
 now after creating dockercompose.yaml for backend and sql we run->
 
+docker compose -d
 
+
+check the sql connection is 
+docker exec -it usermanagement-sql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -C
+
+docker exec -it usermanagement-sql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourStrongPassword123!" -C -N o -Q "SELECT name FROM sys.databases"
+
+
+docker exec -it usermanagement-sql bash
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrongPassword123!' -C
+
+
+to check the db password
+docker exec -it usermanagement-sql env | findstr PASSWORD
+
+to check environment variables
+docker exec -it usermanagement-sql env
+
+
+now we are going to execute sql scripts manually so we are creating init image
+
+to ckeck the volumes -> docker volume ls
+
+to check a specific volume -> docker volume inspect reactuserlogin_sqlserver_data
+to remove an unused volume -> docker volume rm reactuserlogin_sqlserver_data
+
+after adding the init image 
+
+delete the previous existing volume
+then ->  docker compose down -v
+
+again build the docker compose file 
+docker compose up --build
+
+
+we got an issue databse has not created so we check the logs of init container it showed some path is not found error.
+
+then we run the sql init image container
+
+docker run --rm -it mcr.microsoft.com/mssql-tools bash
+
+and find the path where sqlcmd exists
+
+find / -name sqlcmd 2>/dev/null
