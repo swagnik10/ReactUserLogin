@@ -1,0 +1,5 @@
+IF DB_ID('UserManagementDB') IS NULL
+BEGIN
+    CREATE DATABASE UserManagementDB;
+END
+GO

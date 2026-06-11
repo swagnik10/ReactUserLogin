@@ -1,0 +1,16 @@
+to get the file structure -> tree /F /A | Out-File structure.txt  
+
+
+-- after build the backend docker file
+docker build -t usermanagement-api .
+
+docker run -d -p 5000:8080 -e ASPNETCORE_ENVIRONMENT=Development --name usermanagement-api usermanagement-api
+
+check the swagger -> http://localhost:5000/swagger
+
+
+we have created one .env file for storing sql db password & jwt key but we are not push to github
+
+now after creating dockercompose.yaml for backend and sql we run->
+
+

@@ -49,3 +49,7 @@ packages/
 # docker-compose env file
 
 docker-compose.env
+
+# env files
+.env
+!.env.example
