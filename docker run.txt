@@ -58,3 +58,23 @@ docker run --rm -it mcr.microsoft.com/mssql-tools bash
 and find the path where sqlcmd exists
 
 find / -name sqlcmd 2>/dev/null
+
+
+
+
+next we have added .env for frontend and dockerfile added 
+
+docker build -t usermanagement-frontend .
+
+
+we have added nginx.conf
+
+Allow React Router routes
+(/dashboard, /users, etc.)
+
+to continue working after:
+- Browser refresh
+- Direct URL access
+- Bookmark navigation
+
+docker run -d -p 3000:80 --name usermanagement-frontend usermanagement-frontend
