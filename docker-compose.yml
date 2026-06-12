@@ -39,13 +39,26 @@ services:
       - "5000:8080"
 
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      # ASPNETCORE_ENVIRONMENT: Development # Uncomment this line if you want to set the environment to Development for geeting the swagger UI
 
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=${DB_NAME};User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
 
       Jwt__Key: ${JWT_KEY}
       Jwt__Issuer: ${JWT_ISSUER}
       Jwt__Audience: ${JWT_AUDIENCE}
+
+  frontend:
+      build:
+        context: ./Frontend
+        dockerfile: Dockerfile
+
+      container_name: usermanagement-frontend
+
+      depends_on:
+        - backend
+
+      ports:
+        - "3000:80"
 
 volumes:
   sqlserver_data:

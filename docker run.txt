@@ -78,3 +78,18 @@ to continue working after:
 - Bookmark navigation
 
 docker run -d -p 3000:80 --name usermanagement-frontend usermanagement-frontend
+
+
+then we add frontend config in the docker compose file
+and build the docker compose.
+
+to stop all the services 
+
+docker compose down
+docker compose up
+
+
+to get the all running containers ->
+
+docker compose ps
+docker compose ps --all
