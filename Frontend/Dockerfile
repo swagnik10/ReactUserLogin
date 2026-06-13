@@ -3,11 +3,15 @@ FROM node:22-alpine AS build
 
 WORKDIR /app
 
+ARG ENV_FILE=.env
+
 COPY package*.json ./
 
 RUN npm install
 
 COPY . .
+
+RUN cp ${ENV_FILE} .env
 
 RUN npm run build
 

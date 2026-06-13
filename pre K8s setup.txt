@@ -1,0 +1,44 @@
+-- For windows use minikube -->
+
+choco install minikube -y
+docker context use desktop-linux
+choco install kubernetes-cli -y
+minikube start --driver=docker
+
+-- addons on minikube
+
+minikube addons enable metrics-server
+minikube addons enable ingress
+minikube addons list
+
+to check the minikube status -> minikube status
+to delete -> minikube delete
+
+-- to start and stop the MINIKUBE
+minikube stop
+minikube start
+
+Build for docker compose -> docker build --build-arg ENV_FILE=.env -t yourdockerhub/usermanagement-frontend:docker .
+
+Build for k8s -> docker build --build-arg ENV_FILE=.env.k8s -t yourname/usermanagement-frontend:k8s .
+
+
+-- build with versions
+
+
+docker build -t swagnik10/usermanagement-backend:v1 ./Backend
+
+docker build --build-arg ENV_FILE=.env.k8s -t swagnik10/usermanagement-frontend:v1 ./Frontend
+
+docker build -t swagnik10/usermanagement-db-init:v1 ./SQL
+
+
+-- push to dockerhub
+
+docker login
+
+docker push swagnik10/usermanagement-backend:v1
+
+docker push swagnik10/usermanagement-frontend:v1
+
+docker push swagnik10/usermanagement-db-init:v1
