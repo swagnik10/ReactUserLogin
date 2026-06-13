@@ -71,6 +71,8 @@ kubectl get ingress -n usermanagement
 
 add this C:\Windows\System32\drivers\etc inside host file as admin mode
 
+run in another terminal -> minikube tunnel
+
 127.0.0.1 usermanagement.local
 
 
