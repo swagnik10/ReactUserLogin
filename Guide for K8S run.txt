@@ -29,17 +29,17 @@ Required Images are pushed to Docker Hub so we just need to apply the manifest f
 
 Apply the manifest files sequentially
 
-    kubectl apply -f k8s/namespace.yaml
-    kubectl apply -f k8s/secret.yaml
-    kubectl apply -f k8s/configmap.yaml
+    kubectl apply -f K8s-manifest-file/namespace.yaml
+    kubectl apply -f K8s-manifest-file/secret.yaml
+    kubectl apply -f K8s-manifest-file/configmap.yaml
 
-    kubectl apply -f k8s/sqlserver/
-    kubectl apply -f k8s/db-init/job.yaml
+    kubectl apply -f K8s-manifest-file/sqlserver/
+    kubectl apply -f K8s-manifest-file/db-init/job.yaml
 
-    kubectl apply -f k8s/backend/
-    kubectl apply -f k8s/frontend/
+    kubectl apply -f K8s-manifest-file/backend/
+    kubectl apply -f K8s-manifest-file/frontend/
 
-    kubectl apply -f k8s/ingress.yaml
+    kubectl apply -f K8s-manifest-file/ingress.yaml
 
 Go to this path of your local sytem and open the "host" file in admin mode
 
