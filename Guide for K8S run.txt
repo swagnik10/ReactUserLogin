@@ -1,0 +1,73 @@
+In windows you have to install minikube cluster and docker desktop
+
+Docker Desktop is a open source software. Install from any browser to your system.
+
+Minikube install guide -> 
+
+    choco install minikube -y
+
+    minikube version
+
+    change the context -> docker context use desktop-linux
+
+    install kubectl -> choco install kubernetes-cli -y
+
+    to get the kubectl version -> kubectl version --client
+
+    to start minikube -> minikube start --driver=docker
+
+    Now we have add some addons to minikube
+
+        minikube addons enable metrics-server  # to see the usuage of different services inside the cluster
+        minikube addons enable dashboard # to add dashboard
+        minikube addons enable ingress # to add ingress create a link between frontend and backend
+        minikube addons list # to see the addons are added
+        minikube dashboard # to check the dashboard
+
+
+
+Add one .env file in the root folder see reference .env.example
+Add one .env.k8s file inside the frontend folder see refernce ./Frontend/.env.example
+
+
+Push the images to Docker Hub
+
+    docker build -t <user_name>/usermanagement-backend:v1 ./Backend
+    docker build --build-arg ENV_FILE=.env.k8s -t <user_name>/usermanagement-frontend:v1 ./Frontend
+    docker build -t <user_name>/usermanagement-db-init:v1 ./SQL
+    
+    docker push <user_name>/usermanagement-backend:v1
+    docker push <user_name>/usermanagement-frontend:v1
+    docker push <user_name>/usermanagement-db-init:v1
+
+
+
+Apply the manifest files sequentially
+
+    kubectl apply -f k8s/namespace.yaml
+    kubectl apply -f k8s/secret.yaml
+    kubectl apply -f k8s/configmap.yaml
+
+    kubectl apply -f k8s/sqlserver/
+    kubectl apply -f k8s/db-init/job.yaml
+
+    kubectl apply -f k8s/backend/
+    kubectl apply -f k8s/frontend/
+
+    kubectl apply -f k8s/ingress.yaml
+
+Go to this path of your local sytem and open the "host" file in admin mode
+
+    C:\Windows\System32\drivers\etc
+
+    add this -> 127.0.0.1 usermanagement.local
+
+
+
+Open a terminal and run this command 
+
+    minikube tunnel
+    now to broswer and hit -> usermanagement.local
+
+
+Note: To check more details see -> ./Commands and FLow Architecture/pre K8s setup.txt & ./Commands and FLow Architecture/K8s run.txt
