@@ -79,3 +79,14 @@ run in another terminal -> minikube tunnel
 -- we ran a problem like the db connection string was wrong we changes the secret and applied secret and did this 
 
 kubectl rollout restart deployment backend -n usermanagement
+
+-- added one volume to bound logs for backend one persistant volume container created and deployment file modified
+
+kubectl apply -f .\k8s\backend\pvc.yaml    
+kubectl apply -f .\k8s\backend\deployment.yaml
+
+go inside the backend pod 
+
+kubectl exec -it backend-789cf6cbf4-pfmxr -n usermanagement -- /bin/bash
+
+to see the directory -> ls -d */
