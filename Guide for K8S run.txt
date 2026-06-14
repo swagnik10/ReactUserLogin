@@ -30,16 +30,7 @@ Add one .env file in the root folder see reference .env.example
 Add one .env.k8s file inside the frontend folder see refernce ./Frontend/.env.example
 
 
-Push the images to Docker Hub
-
-    docker build -t <user_name>/usermanagement-backend:v1 ./Backend
-    docker build --build-arg ENV_FILE=.env.k8s -t <user_name>/usermanagement-frontend:v1 ./Frontend
-    docker build -t <user_name>/usermanagement-db-init:v1 ./SQL
-    
-    docker push <user_name>/usermanagement-backend:v1
-    docker push <user_name>/usermanagement-frontend:v1
-    docker push <user_name>/usermanagement-db-init:v1
-
+Required Images are pushed to Docker Hub
 
 
 Apply the manifest files sequentially
