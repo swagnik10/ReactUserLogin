@@ -18,6 +18,11 @@ to delete -> minikube delete
 minikube stop
 minikube start
 
+
+Add one .env file in the root folder see reference .env.example
+Add one .env.k8s file inside the frontend folder see refernce ./Frontend/.env.example
+
+
 Build for docker compose -> docker build --build-arg ENV_FILE=.env -t yourdockerhub/usermanagement-frontend:docker .
 
 Build for k8s -> docker build --build-arg ENV_FILE=.env.k8s -t yourname/usermanagement-frontend:k8s .
@@ -33,7 +38,7 @@ docker build --build-arg ENV_FILE=.env.k8s -t swagnik10/usermanagement-frontend:
 docker build -t swagnik10/usermanagement-db-init:v1 ./SQL
 
 
--- push to dockerhub
+-- push to dockerhub -> Required Images are pushed to Docker Hub
 
 docker login
 

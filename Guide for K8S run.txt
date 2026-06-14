@@ -24,13 +24,7 @@ Minikube install guide ->
         minikube addons list # to see the addons are added
         minikube dashboard # to check the dashboard
 
-
-
-Add one .env file in the root folder see reference .env.example
-Add one .env.k8s file inside the frontend folder see refernce ./Frontend/.env.example
-
-
-Required Images are pushed to Docker Hub
+Required Images are pushed to Docker Hub so we just need to apply the manifest files
 
 
 Apply the manifest files sequentially
