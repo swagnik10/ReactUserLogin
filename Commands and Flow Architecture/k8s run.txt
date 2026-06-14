@@ -1,0 +1,92 @@
+[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("YourStrongPassword123!"))
+
+[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("THIS_IS_A_DEV_SECRET_KEY_CHANGE_LATER"))
+
+[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("Server=sqlserver;Database=UserManagementDB;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=True;"))
+
+
+
+
+kubectl apply -f k8s/namespace.yaml
+
+kubectl apply -f k8s/secret.yaml
+
+kubectl get secret app-secret -n usermanagement
+
+kubectl apply -f k8s/configmap.yaml
+
+kubectl apply -f k8s/sqlserver/
+
+kubectl get secrets -n usermanagement
+kubectl get all -n usermanagement
+
+
+-- sql
+
+kubectl apply -f k8s/db-init/job.yaml
+
+kubectl describe pod db-init-jgppq -n usermanagement
+
+
+--to check the sql scripts execution go inside the sql pod
+
+kubectl exec -it sqlserver-0 -n usermanagement -- /bin/bash
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrongPassword123!' -C
+
+
+kubectl get jobs -n usermanagement
+
+- backend
+
+kubectl apply -f k8s/backend/
+
+-- to check the live status of pod 
+kubectl get pod backend-768fb967-mbb6x -n usermanagement -w
+
+
+to check backend service working or not
+
+kubectl run curl --image=curlimages/curl --rm -it --restart=Never -n usermanagement -- sh
+kubectl port-forward svc/backend 5000:80 -n usermanagement
+
+-- frontend
+
+kubectl apply -f k8s/frontend/
+
+-- to check frontend service is working or not
+
+kubectl port-forward svc/frontend 3000:80 -n usermanagement
+
+-- goto browser and hit 
+
+http://localhost:3000
+
+
+Now move to ingress -> ingress addons sould be there in minikube
+
+kubectl apply -f k8s/ingress.yaml
+
+kubectl get ingress -n usermanagement
+
+
+add this C:\Windows\System32\drivers\etc inside host file as admin mode
+
+run in another terminal -> minikube tunnel
+
+127.0.0.1 usermanagement.local
+
+
+-- we ran a problem like the db connection string was wrong we changes the secret and applied secret and did this 
+
+kubectl rollout restart deployment backend -n usermanagement
+
+-- added one volume to bound logs for backend one persistant volume container created and deployment file modified
+
+kubectl apply -f .\k8s\backend\pvc.yaml    
+kubectl apply -f .\k8s\backend\deployment.yaml
+
+go inside the backend pod 
+
+kubectl exec -it backend-789cf6cbf4-pfmxr -n usermanagement -- /bin/bash
+
+to see the directory -> ls -d */
