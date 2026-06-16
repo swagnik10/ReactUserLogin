@@ -5,8 +5,16 @@ metadata:
   name: usermanagement-ingress
   namespace: usermanagement
 
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
 spec:
   ingressClassName: nginx
+
+  tls:
+    - hosts:
+        - usermanagement.local
+      secretName: usermanagement-tls
 
   rules:
     - host: usermanagement.local

@@ -1,0 +1,38 @@
+Open powershell in admin mode and install openssl -> choco install openssl -y
+
+Open different powershell -> openssl version
+
+Certificate generation -> in the current path tls.crt & tls.key generated This is a self signed certificate.........
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=usermanagement.local"
+
+
+
+kubectl create secret tls usermanagement-tls --cert=Certificates\tls.crt --key=Certificates\tls.key -n usermanagement
+
+
+
+Different approach this worked
+
+	choco install mkcert -y
+
+	mkcert usermanagement.local
+
+
+	kubectl create secret tls usermanagement-tls --cert=Certificates\usermanagement.local.pem --key=Certificates\usermanagement.local-key.pem -n usermanagement
+
+	ingress file changed
+	redeploying the ingress -> kubectl rollout restart deployment ingress-nginx-controller -n ingress-nginx
+
+
+	now go to -> certlm.msc
+
+	
+	Trusted Root Certification Authorities
+	└── Certificates
+	import  -> C:\Users\hp\AppData\Local\mkcert\rootCA.pem
+
+
+And hit https://usermanagement.local/signin
+
+
