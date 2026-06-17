@@ -1,14 +1,16 @@
-Open powershell in admin mode and install openssl -> choco install openssl -y
+Self Signed Certificate But Not worked this approach
 
-Open different powershell -> openssl version
-
-Certificate generation -> in the current path tls.crt & tls.key generated This is a self signed certificate.........
-
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=usermanagement.local"
-
-
-
-kubectl create secret tls usermanagement-tls --cert=Certificates\tls.crt --key=Certificates\tls.key -n usermanagement
+	Open powershell in admin mode and install openssl -> choco install openssl -y
+	
+	Open different powershell -> openssl version
+	
+	Certificate generation -> in the current path tls.crt & tls.key generated This is a self signed certificate.........
+	
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=usermanagement.local"
+	
+	
+	
+	kubectl create secret tls usermanagement-tls --cert=Certificates\tls.crt --key=Certificates\tls.key -n usermanagement
 
 
 
@@ -16,21 +18,40 @@ Different approach this worked
 
 	choco install mkcert -y
 
+	Check -> mkcert -CAROOT  -> get the path and go there 
+
+	see for this two files -> rootCA.pem
+	                         rootCA-key.pem
+	
+	if not there execute -> mkcert -install
+	
+	Now we have to add this certificate to our local system
+	
+	now go to -> certlm.msc
+		
+		Trusted Root Certification Authorities
+		└── Certificates
+		import  -> that rootCA.pem
+
+I have created one folder say Certificates and there I run this command ->
+
 	mkcert usermanagement.local
 
+Ensure Docker Desktop and Minikube should run ->
+
+    check minikube status if stop then 
+
+        minikube start
+
+To create certificate inside the todo-app namespace
 
 	kubectl create secret tls usermanagement-tls --cert=Certificates\usermanagement.local.pem --key=Certificates\usermanagement.local-key.pem -n usermanagement
 
 	ingress file changed
-	redeploying the ingress -> kubectl rollout restart deployment ingress-nginx-controller -n ingress-nginx
 
+		kubectl apply -f  k8s-manifest-file/ingress
+		redeploying the ingress -> kubectl rollout restart deployment ingress-nginx-controller -n ingress-nginx
 
-	now go to -> certlm.msc
-
-	
-	Trusted Root Certification Authorities
-	└── Certificates
-	import  -> C:\Users\hp\AppData\Local\mkcert\rootCA.pem
 
 
 And hit https://usermanagement.local/signin
