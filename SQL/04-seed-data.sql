@@ -28,16 +28,16 @@ IF NOT EXISTS
        OR Email = 'admin@test.com'
 )
 BEGIN
-    INSERT INTO auth.Users
+    INSERT INTO auth.users
     (
-        Username,
-        FirstName,
-        LastName,
-        Email,
-        PhoneNumber,
-        Password,
-        IsActive,
-        CreatedAt
+        username,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        password,
+        is_active,
+        created_at
     )
     VALUES
     (
@@ -54,20 +54,19 @@ END
 IF NOT EXISTS
 (
     SELECT 1
-    FROM auth.UserRoles
-    WHERE UserId = 1
-      AND RoleId = 1
+    FROM auth.user_roles
+    WHERE user_id = 1
+      AND role_id = 1
 )
 BEGIN
-    INSERT INTO auth.UserRoles
+    INSERT INTO auth.user_roles
     (
-        UserId,
-        RoleId
+        user_id,
+        role_id
     )
     VALUES
     (
         1,
         1
     );
-END
 GO
