@@ -11,10 +11,11 @@ public class RoleMap : ClassMap<Role>
         Table("Roles");
 
         Id(x => x.RoleId)
-            .Column("RoleId")
+            .Column("role_id")
             .GeneratedBy.Identity();
 
         Map(x => x.Name)
+            .Column("name")
             .Not.Nullable()
             .Length(50);
     }

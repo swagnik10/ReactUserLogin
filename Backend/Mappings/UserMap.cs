@@ -11,16 +11,16 @@ public class UserMap : ClassMap<User>
         Table("Users");
 
         Id(x => x.UserId)
-            .Column("UserId")
+            .Column("user_id")
             .GeneratedBy.Identity();
 
-        Map(x => x.Username).Not.Nullable().Length(100);
-        Map(x => x.FirstName).Not.Nullable().Length(100);
-        Map(x => x.LastName).Not.Nullable().Length(100);
-        Map(x => x.Email).Not.Nullable().Length(255);
-        Map(x => x.PhoneNumber).Length(20);
-        Map(x => x.Password).Not.Nullable().Length(255);
-        Map(x => x.IsActive).Not.Nullable();
-        Map(x => x.CreatedAt).Not.Nullable();
+        Map(x => x.Username).Column("username").Not.Nullable().Length(100);
+        Map(x => x.FirstName).Column("first_name").Not.Nullable().Length(100);
+        Map(x => x.LastName).Column("last_name").Not.Nullable().Length(100);
+        Map(x => x.Email).Column("email").Not.Nullable().Length(255);
+        Map(x => x.PhoneNumber).Column("phone_number").Length(20);
+        Map(x => x.Password).Column("password").Not.Nullable().Length(255);
+        Map(x => x.IsActive).Column("is_active").Not.Nullable();
+        Map(x => x.CreatedAt).Column("created_at").Not.Nullable();
     }
 }

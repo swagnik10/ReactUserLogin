@@ -10,21 +10,21 @@ IF NOT EXISTS
       AND s.name = 'auth'
 )
 BEGIN
-    CREATE TABLE auth.Users
+    CREATE TABLE auth.users
     (
-        UserId INT IDENTITY(1,1) NOT NULL,
-        Username VARCHAR(100) NOT NULL,
-        FirstName VARCHAR(100) NOT NULL,
-        LastName VARCHAR(100) NOT NULL,
-        Email VARCHAR(255) NOT NULL,
-        PhoneNumber VARCHAR(20),
-        Password VARCHAR(255) NOT NULL,
-        IsActive BIT NOT NULL DEFAULT 1,
-        CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+        user_id INT IDENTITY(1,1) NOT NULL,
+        username VARCHAR(100) NOT NULL,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone_number VARCHAR(20),
+        password VARCHAR(255) NOT NULL,
+        is_active BIT NOT NULL DEFAULT 1,
+        created_at DATETIME NOT NULL DEFAULT GETDATE(),
 
-        CONSTRAINT PK_Users PRIMARY KEY (UserId),
-        CONSTRAINT UQ_Users_Username UNIQUE (Username),
-        CONSTRAINT UQ_Users_Email UNIQUE (Email)
+        CONSTRAINT pk_users PRIMARY KEY (user_id),
+        CONSTRAINT uq_users_username UNIQUE (username),
+        CONSTRAINT uq_users_email UNIQUE (email)
     );
 END
 GO
@@ -38,13 +38,13 @@ IF NOT EXISTS
       AND s.name = 'auth'
 )
 BEGIN
-    CREATE TABLE auth.Roles
+    CREATE TABLE auth.roles
     (
-        RoleId INT IDENTITY(1,1) NOT NULL,
-        Name VARCHAR(50) NOT NULL,
+        role_id INT IDENTITY(1,1) NOT NULL,
+        name VARCHAR(50) NOT NULL,
 
-        CONSTRAINT PK_Roles PRIMARY KEY (RoleId),
-        CONSTRAINT UQ_Roles_Name UNIQUE (Name)
+        CONSTRAINT pk_roles PRIMARY KEY (role_id),
+        CONSTRAINT uq_roles_name UNIQUE (name)
     );
 END
 GO
@@ -58,20 +58,20 @@ IF NOT EXISTS
       AND s.name = 'auth'
 )
 BEGIN
-    CREATE TABLE auth.UserRoles
+    CREATE TABLE auth.user_roles
     (
-        UserId INT NOT NULL,
-        RoleId INT NOT NULL,
+        user_id INT NOT NULL,
+        role_id INT NOT NULL,
 
-        CONSTRAINT PK_UserRoles PRIMARY KEY (UserId, RoleId),
+        CONSTRAINT pk_user_roles PRIMARY KEY (user_id, role_id),
 
-        CONSTRAINT FK_UserRoles_Users
-            FOREIGN KEY (UserId)
-            REFERENCES auth.Users(UserId),
+        CONSTRAINT fk_user_roles_users
+            FOREIGN KEY (user_id)
+            REFERENCES auth.users(user_id),
 
-        CONSTRAINT FK_UserRoles_Roles
-            FOREIGN KEY (RoleId)
-            REFERENCES auth.Roles(RoleId)
+        CONSTRAINT fk_user_roles_roles
+            FOREIGN KEY (role_id)
+            REFERENCES auth.roles(role_id)
     );
 END
 GO
