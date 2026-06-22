@@ -1,0 +1,116 @@
+In Neon -> SQL Editor
+
+Get schemas and tables
+
+    SELECT schema_name FROM information_schema.schemata;
+
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'auth'
+    ORDER BY table_name;
+
+Schema Creation
+
+    CREATE SCHEMA auth;
+
+
+In SQL UserId -> Postgress stores as userid all in smaller case
+
+If we want it as it is then "UserId" use double quotes
+
+Table Crration 
+
+
+    CREATE TABLE auth."Users"
+    (
+        "UserId" INT GENERATED ALWAYS AS IDENTITY,
+        "Username" VARCHAR(100) NOT NULL,
+        "FirstName" VARCHAR(100) NOT NULL,
+        "LastName" VARCHAR(100) NOT NULL,
+        "Email" VARCHAR(255) NOT NULL,
+        "PhoneNumber" VARCHAR(20),
+        "Password" VARCHAR(255) NOT NULL,
+        "IsActive" BOOLEAN NOT NULL DEFAULT TRUE,
+        "CreatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+        CONSTRAINT "PK_Users" PRIMARY KEY ("UserId"),
+        CONSTRAINT "UQ_Users_Username" UNIQUE ("Username"),
+        CONSTRAINT "UQ_Users_Email" UNIQUE ("Email")
+    );
+
+    CREATE TABLE auth."Roles"
+    (
+        "RoleId" INT GENERATED ALWAYS AS IDENTITY,
+        "Name" VARCHAR(50) NOT NULL,
+
+        CONSTRAINT "PK_Roles" PRIMARY KEY ("RoleId"),
+        CONSTRAINT "UQ_Roles_Name" UNIQUE ("Name")
+    );
+
+    CREATE TABLE auth."UserRoles"
+    (
+        "UserId" INT NOT NULL,
+        "RoleId" INT NOT NULL,
+
+        CONSTRAINT "PK_UserRoles" PRIMARY KEY ("UserId", "RoleId"),
+
+        CONSTRAINT "FK_UserRoles_Users"
+            FOREIGN KEY ("UserId")
+            REFERENCES auth."Users"("UserId"),
+
+        CONSTRAINT "FK_UserRoles_Roles"
+            FOREIGN KEY ("RoleId")
+            REFERENCES auth."Roles"("RoleId")
+    );
+
+
+
+
+select * from auth."Users";
+select * from auth."Users";
+select * from auth."UserRoles";
+
+
+
+
+Data Seeding
+
+    INSERT INTO auth."Roles"("Name")
+    VALUES ('Admin');
+
+    INSERT INTO auth."Roles"("Name")
+    VALUES ('User');
+
+    INSERT INTO auth."Users"
+    (
+        "Username",
+        "FirstName",
+        "LastName",
+        "Email",
+        "PhoneNumber",
+        "Password",
+        "IsActive",
+        "CreatedAt"
+    )
+    VALUES
+    (
+        'admin',
+        'System',
+        'Administrator',
+        'admin@test.com',
+        '9999999999',
+        'Admin123',
+        TRUE,
+        CURRENT_TIMESTAMP
+    );
+
+    INSERT INTO auth."UserRoles"
+    (
+        "UserId",
+        "RoleId"
+    )
+    VALUES
+    (
+        1,
+        1
+    );
