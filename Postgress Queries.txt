@@ -9,6 +9,10 @@ Get schemas and tables
     WHERE table_schema = 'auth'
     ORDER BY table_name;
 
+    SELECT sequence_schema, sequence_name
+    FROM information_schema.sequences
+    ORDER BY sequence_schema, sequence_name;
+
 Schema Creation
 
     CREATE SCHEMA auth;
@@ -18,12 +22,16 @@ In SQL UserId -> Postgress stores as userid all in smaller case
 
 If we want it as it is then "UserId" use double quotes
 
-Table Crration 
+Table Creation 
 
+
+    CREATE SEQUENCE auth.users_user_id_seq
+        START WITH 1
+        INCREMENT BY 1;
 
     CREATE TABLE auth.users
     (
-        user_id INT GENERATED ALWAYS AS IDENTITY,
+        user_id INT NOT NULL DEFAULT nextval('auth.users_user_id_seq'),
         username VARCHAR(100) NOT NULL,
         first_name VARCHAR(100) NOT NULL,
         last_name VARCHAR(100) NOT NULL,
@@ -38,9 +46,13 @@ Table Crration
         CONSTRAINT uq_users_email UNIQUE (email)
     );
 
+    CREATE SEQUENCE auth.roles_role_id_seq
+        START WITH 1
+        INCREMENT BY 1;
+
     CREATE TABLE auth.roles
     (
-        role_id INT GENERATED ALWAYS AS IDENTITY,
+        role_id INT NOT NULL DEFAULT nextval('auth.roles_role_id_seq'),
         name VARCHAR(50) NOT NULL,
 
         CONSTRAINT pk_roles PRIMARY KEY (role_id),

@@ -12,7 +12,7 @@ public class UserMap : ClassMap<User>
 
         Id(x => x.UserId)
             .Column("user_id")
-            .GeneratedBy.Identity();
+            .GeneratedBy.Sequence("auth.users_user_id_seq");
 
         Map(x => x.Username).Column("username").Not.Nullable().Length(100);
         Map(x => x.FirstName).Column("first_name").Not.Nullable().Length(100);

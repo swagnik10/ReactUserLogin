@@ -12,7 +12,7 @@ public class RoleMap : ClassMap<Role>
 
         Id(x => x.RoleId)
             .Column("role_id")
-            .GeneratedBy.Identity();
+            .GeneratedBy.Sequence("auth.roles_role_id_seq");
 
         Map(x => x.Name)
             .Column("name")

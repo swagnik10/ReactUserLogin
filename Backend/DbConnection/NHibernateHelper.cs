@@ -33,6 +33,25 @@ public static class NHibernateHelper
                                                     .AddFromAssemblyOf<User>()
                                             )
                                             .BuildSessionFactory();
+
+                //var metadata = _sessionFactory.GetClassMetadata(typeof(User));
+
+                //Console.WriteLine($"Identifier Type: {metadata.IdentifierType.Name}");
+
+                //var sessionFactoryImpl =
+                //    (NHibernate.Impl.SessionFactoryImpl)_sessionFactory;
+
+                //Console.WriteLine(
+                //    $"Dialect: {sessionFactoryImpl.Settings.Dialect.GetType().FullName}"
+                //);
+
+                //var metadata2 =
+                //    (NHibernate.Persister.Entity.AbstractEntityPersister)
+                //    _sessionFactory.GetClassMetadata(typeof(User));
+
+                //Console.WriteLine(
+                //    $"Identifier Generator: {metadata2.IdentifierGenerator.GetType().FullName}"
+                //);
             }
 
             return _sessionFactory;
