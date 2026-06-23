@@ -98,11 +98,10 @@ var app = builder.Build();
 Log.Information("Application build scucessfully at {Time}", DateTime.Now);
 
 // Swagger (Development only)
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 
