@@ -25,6 +25,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
 
@@ -58,7 +59,7 @@ const SignUp = () => {
         toast.error("Phone Number Should be 10 digits long");
         return;
       }
-
+      setIsLoading(true);
       await register({
         username,
         firstName,
@@ -77,7 +78,11 @@ const SignUp = () => {
         error.message ??
         "Registration failed"
       );
-    };
+    }
+    finally {
+      setIsLoading(false);
+    }
+    ;
   };
 
   return (
@@ -127,18 +132,22 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button onClick={handleSubmit} fullWidth>
+          <Button onClick={handleSubmit} fullWidth disabled={isLoading}>
             Create Account
           </Button>
 
           <p className="text-center text-sm">
             Already have an account?{" "}
-            <Link
-              to={ROUTE_PATHS.SIGN_IN}
-              className="text-blue-600 hover:underline"
-            >
-              Sign In
-            </Link>
+            {isLoading ? (
+              <span className="text-gray-400">Sign In</span>
+            ) : (
+              <Link
+                to={ROUTE_PATHS.SIGN_IN}
+                className="text-blue-600 hover:underline"
+              >
+                Sign In
+              </Link>
+            )}
           </p>
         </div>
       </Card>

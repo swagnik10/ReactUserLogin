@@ -21,6 +21,7 @@ const SignIn = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
 
@@ -33,6 +34,7 @@ const SignIn = () => {
         toast.error("Password must be at least 6 characters.");
         return;
       }
+      setIsLoading(true);
       const response = await login({
         email,
         password,
@@ -53,7 +55,7 @@ const SignIn = () => {
 
       dispatch(loginSuccess(response));
 
-      if (response.role === "Admin") {
+      if (response.role === "Admin" || response.role === "DemoAdmin") {
         navigate(ROUTE_PATHS.ADMIN);
       } else {
         navigate(ROUTE_PATHS.DASHBOARD);
@@ -62,6 +64,9 @@ const SignIn = () => {
       toast.success("Login successful");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Login failed");
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,18 +96,22 @@ const SignIn = () => {
             }
           />
 
-          <Button onClick={handleSubmit} fullWidth>
+          <Button onClick={handleSubmit} fullWidth disabled={isLoading}>
             Sign In
           </Button>
 
           <p className="text-center text-sm">
             Don't have an account?{" "}
-            <Link
-              to={ROUTE_PATHS.SIGN_UP}
-              className="text-blue-600"
-            >
-              Create Account
-            </Link>
+            {isLoading ? (
+              <span className="text-gray-400">Create Account</span>
+            ) : (
+              <Link
+                to={ROUTE_PATHS.SIGN_UP}
+                className="text-blue-600 hover:underline"
+              >
+                Create Account
+              </Link>
+            )}
           </p>
         </div>
       </Card>

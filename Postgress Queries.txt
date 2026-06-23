@@ -93,6 +93,9 @@ Data Seeding
     INSERT INTO auth.roles (name)
     VALUES ('User');
 
+    INSERT INTO auth.roles (name)
+    VALUES ('DemoAdmin');
+
     INSERT INTO auth.users
     (
         username,
@@ -124,5 +127,5 @@ Data Seeding
     VALUES
     (
         1,
-        1
+        3
     );

@@ -8,7 +8,6 @@ namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
 
 
     public class UsersController : ControllerBase
@@ -23,6 +22,7 @@ namespace Backend.Controllers
             _mediator = mediator;
         }
 
+        [Authorize(Roles = "Admin,DemoAdmin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -32,6 +32,7 @@ namespace Backend.Controllers
             return Ok(users);
         }
 
+        [Authorize(Roles = "Admin,DemoAdmin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -41,6 +42,7 @@ namespace Backend.Controllers
             return Ok(user);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateUserBody request)
         {
@@ -53,6 +55,7 @@ namespace Backend.Controllers
             });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -65,6 +68,7 @@ namespace Backend.Controllers
             });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}/role")]
         public async Task<IActionResult> UpdateRole(int id, UpdateUserRoleBody request)
         {

@@ -203,7 +203,7 @@ const UserDetails = () => {
 
               <button
                 onClick={handleRoleUpdate}
-                className="rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
+                className="rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700 md:cursor-pointer"
               >
                 Update Role
               </button>
@@ -276,7 +276,7 @@ const UserDetails = () => {
             {!isEditing ? (
               <button
                 onClick={handleEdit}
-                className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 md:cursor-pointer"
               >
                 Edit
               </button>
@@ -284,14 +284,14 @@ const UserDetails = () => {
               <>
                 <button
                   onClick={handleUpdate}
-                  className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+                  className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700 md:cursor-pointer"
                 >
                   Save
                 </button>
 
                 <button
                   onClick={handleCancel}
-                  className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+                  className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600 md:cursor-pointer"
                 >
                   Cancel
                 </button>
