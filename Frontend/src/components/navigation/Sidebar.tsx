@@ -70,6 +70,9 @@ const Sidebar = ({
             >
               Settings
             </NavLink>
+            <NavLink to={ROUTE_PATHS.AGENT_WORKSPACE}>
+              AI Agent
+            </NavLink>
           </nav>
         </div>
 

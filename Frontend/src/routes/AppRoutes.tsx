@@ -15,6 +15,8 @@ import AdminLayout from "../layouts/AdminLayout";
 import NotFound from "../pages/notfound/NotFound";
 import Settings from "../pages/admin/Settings";
 import Roles from "../pages/admin/Roles";
+import AgentWorkspace from "../pages/admin/AgentWorkspace";
+import { ROUTE_PATHS } from "./routePaths";
 
 const AppRoutes = () => {
   return (
@@ -42,6 +44,7 @@ const AppRoutes = () => {
           <Route path="/admin/roles" element={<Roles />} />
           <Route path="/admin/settings" element={<Settings />} />
           <Route path="/user/:id" element={<UserDetails />} />
+          <Route path={ROUTE_PATHS.AGENT_WORKSPACE} element={<AgentWorkspace />}/>
         </Route>
       </Route>
 

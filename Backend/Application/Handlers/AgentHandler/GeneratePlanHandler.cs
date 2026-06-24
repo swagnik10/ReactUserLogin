@@ -35,7 +35,8 @@ public class GeneratePlanHandler
                     ["LastName"] = "",
                     ["Email"] = "",
                     ["Username"] = username,
-                    ["Password"] = ""
+                    ["Password"] = "",
+                    ["PhoneNumber"] = ""
                 }
             });
 

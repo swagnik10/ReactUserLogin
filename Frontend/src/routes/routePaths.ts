@@ -12,4 +12,5 @@ export const ROUTE_PATHS = {
   ADMIN_SETTINGS: "/admin/settings",
 
   USER_DETAILS: "/user/:id",
+  AGENT_WORKSPACE: "/admin/agent",
 };
