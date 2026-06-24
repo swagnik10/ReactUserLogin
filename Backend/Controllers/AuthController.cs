@@ -24,12 +24,13 @@ public class AuthController : ControllerBase
     {
 
         _logger.LogInformation("Registering user with username: {Username}", request.Username);
-        await _mediator.Send(new RegisterUserRequest(request));
+        var result = await _mediator.Send(new RegisterUserRequest(request));
 
         return Ok(new
         {
-            Message =
-                "User registered successfully."
+            Message = "User registered successfully.",
+            UserId = result.UserId,
+            Username = result.Username
         });
         
     }
