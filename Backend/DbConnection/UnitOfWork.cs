@@ -16,7 +16,7 @@ public class UnitOfWork : IUnitOfWork
 
     public void BeginTransaction()
     {
-        if (_transaction == null || !_transaction.IsActive)
+        if (_session.GetCurrentTransaction() == null || _session.GetCurrentTransaction().IsActive == false)
         {
             _transaction = _session.BeginTransaction();
         }
@@ -65,7 +65,10 @@ public class UnitOfWork : IUnitOfWork
         {
             _transaction.Dispose();
         }
+    }
 
-        _session.Dispose();
+    public bool HasActiveTransaction()
+    {
+        return _session.GetCurrentTransaction() != null && _session.GetCurrentTransaction().IsActive;
     }
 }

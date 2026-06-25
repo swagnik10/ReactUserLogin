@@ -1,4 +1,6 @@
+using Backend.Application.Agents;
 using Backend.DbConnection;
+using Backend.DTOs.Agent;
 using Backend.Mapper;
 using Backend.Middlewares;
 using Backend.Repositories;
@@ -56,6 +58,11 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<UserMappingProfile>();
 });
+
+builder.Services.Configure<GeminiSettings>(
+    builder.Configuration.GetSection("Gemini"));
+
+builder.Services.AddHttpClient<IAiPlannerService, GeminiPlannerService>();
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 
