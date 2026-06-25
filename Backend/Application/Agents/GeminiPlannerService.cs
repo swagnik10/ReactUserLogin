@@ -1,8 +1,6 @@
-﻿using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using Backend.DTOs.Agent;
+﻿using Backend.DTOs.Agent;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace Backend.Application.Agents;
 

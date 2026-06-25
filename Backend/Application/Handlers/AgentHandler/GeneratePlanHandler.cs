@@ -9,19 +9,23 @@ public class GeneratePlanHandler
     : IRequestHandler<GeneratePlanRequest, AgentPlanDto>
 {
     private readonly IAiPlannerService _planner;
+    private readonly ILogger<GeneratePlanHandler> _logger;
 
     public GeneratePlanHandler(
-        IAiPlannerService planner)
+        IAiPlannerService planner, ILogger<GeneratePlanHandler> logger)
     {
         _planner = planner;
+        _logger = logger;
     }
 
     public async Task<AgentPlanDto> Handle(
         GeneratePlanRequest request,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Generate Plan Handler started");
         return await _planner.GeneratePlanAsync(
             request.Prompt,
             cancellationToken);
+        
     }
 }
