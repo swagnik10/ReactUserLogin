@@ -42,7 +42,12 @@ public class UpdateUserByRoleHandler : IRequestHandler<UpdateRoleRequest>
 
         using var uow = _uowFactory.Create();
 
-        uow.BeginTransaction();
+        var ownsTransaction = !uow.HasActiveTransaction();
+
+        if (ownsTransaction)
+        {
+            uow.BeginTransaction();
+        }
 
         try
         {
@@ -79,11 +84,18 @@ public class UpdateUserByRoleHandler : IRequestHandler<UpdateRoleRequest>
                     RoleId = role.RoleId
                 });
 
-            await uow.CommitAsync();
+            if (ownsTransaction)
+            {
+                await uow.CommitAsync();
+            }
         }
         catch
         {
-            await uow.RollbackAsync();
+            if(ownsTransaction)
+            {
+                await uow.RollbackAsync();
+            }
+            
             throw;
         }
     }

@@ -43,7 +43,12 @@ public class RegisterHandler : IRequestHandler<RegisterUserRequest, CreatedUserD
 
         using var uow = _uowFactory.Create();
 
-        uow.BeginTransaction();
+        var ownsTransaction = !uow.HasActiveTransaction();
+
+        if (ownsTransaction)
+        {
+            uow.BeginTransaction();
+        }
 
         try
         {
@@ -83,7 +88,10 @@ public class RegisterHandler : IRequestHandler<RegisterUserRequest, CreatedUserD
                     RoleId = userRole.RoleId
                 });
 
-            await uow.CommitAsync();
+            if (ownsTransaction)
+            {
+                await uow.CommitAsync();
+            }
 
             return new CreatedUserDto
             {
@@ -93,7 +101,10 @@ public class RegisterHandler : IRequestHandler<RegisterUserRequest, CreatedUserD
         }
         catch
         {
-            await uow.RollbackAsync();
+            if(ownsTransaction)
+            {
+                await uow.RollbackAsync();
+            }
             throw new InvalidOperationException("User creation failed.");
         }
     }

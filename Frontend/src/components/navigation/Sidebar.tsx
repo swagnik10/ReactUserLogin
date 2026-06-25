@@ -70,8 +70,11 @@ const Sidebar = ({
             >
               Settings
             </NavLink>
-            <NavLink to={ROUTE_PATHS.AGENT_WORKSPACE}>
+            <NavLink to={ROUTE_PATHS.AGENT_WORKSPACE}
+            onClick={onClose}
+            className="px-6 py-3 hover:bg-slate-800">
               AI Agent
+              
             </NavLink>
           </nav>
         </div>

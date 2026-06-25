@@ -17,3 +17,8 @@ export interface AgentExecutionResult {
 export interface AgentPromptRequest {
   prompt: string;
 }
+
+export interface ExecutePlanResponse {
+  message: string;
+  result: AgentExecutionResult;
+}

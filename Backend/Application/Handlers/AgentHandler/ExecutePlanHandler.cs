@@ -1,5 +1,6 @@
 ﻿using Backend.Application.Agents;
 using Backend.Application.CommandAndQuery;
+using Backend.DbConnection;
 using Backend.DTOs.Agent;
 using Backend.DTOs.Auth;
 using Backend.DTOs.Users;
@@ -12,13 +13,16 @@ public class ExecutePlanHandler : IRequestHandler<ExecutePlanRequest, AgentExecu
 {
     private readonly IMediator _mediator;
     private readonly ILogger<ExecutePlanHandler> _logger;
+    private readonly IUnitOfWorkFactory _uowFactory;
 
     public ExecutePlanHandler(
         IMediator mediator,
-        ILogger<ExecutePlanHandler> logger)
+        ILogger<ExecutePlanHandler> logger,
+        IUnitOfWorkFactory uowFactory)
     {
         _mediator = mediator;
         _logger = logger;
+        _uowFactory = uowFactory;
     }
 
     public async Task<AgentExecutionResultDto> Handle(ExecutePlanRequest request, CancellationToken cancellationToken)
@@ -32,13 +36,15 @@ public class ExecutePlanHandler : IRequestHandler<ExecutePlanRequest, AgentExecu
 
         int createdUserId = 0;
 
+        using var uow = _uowFactory.Create();
+
+        uow.BeginTransaction();
+
         try
         {
             foreach (var step in request.Plan.Steps)
             {
-                _logger.LogInformation(
-                    "Executing action: {Action}",
-                    step.Action);
+                _logger.LogInformation("Executing action: {Action}", step.Action);
 
                 switch (step.Action)
                 {
@@ -54,12 +60,11 @@ public class ExecutePlanHandler : IRequestHandler<ExecutePlanRequest, AgentExecu
                             LastName = step.Parameters["LastName"],
                             Email = step.Parameters["Email"],
                             Username = step.Parameters["Username"],
-                            Password = step.Parameters["Password"]
+                            Password = step.Parameters["Password"],
+                            PhoneNumber = step.Parameters["PhoneNumber"]
                         };
 
-                        var createdUser = await _mediator.Send(
-                            new RegisterUserRequest(registerBody),
-                            cancellationToken);
+                        var createdUser = await _mediator.Send(new RegisterUserRequest(registerBody), cancellationToken);
 
                         createdUserId = createdUser.UserId;
 
@@ -67,8 +72,7 @@ public class ExecutePlanHandler : IRequestHandler<ExecutePlanRequest, AgentExecu
                             createdUser.UserId,
                             createdUser.Username);
 
-                        result.Messages.Add(
-                            $"User '{createdUser.Username}' created successfully.");
+                        result.Messages.Add($"User '{createdUser.Username}' created successfully.");
 
                         break;
 
@@ -76,11 +80,9 @@ public class ExecutePlanHandler : IRequestHandler<ExecutePlanRequest, AgentExecu
 
                         if (createdUserId == 0)
                         {
-                            _logger.LogError(
-                                "AssignRole attempted before CreateUser.");
+                            _logger.LogError("AssignRole attempted before CreateUser.");
 
-                            throw new InvalidOperationException(
-                                "Cannot assign role before creating a user.");
+                            throw new InvalidOperationException("Cannot assign role before creating a user.");
                         }
 
                         var roleName = step.Parameters["RoleName"];
@@ -102,8 +104,7 @@ public class ExecutePlanHandler : IRequestHandler<ExecutePlanRequest, AgentExecu
                             roleName,
                             createdUserId);
 
-                        result.Messages.Add(
-                            $"Role '{roleName}' assigned successfully.");
+                        result.Messages.Add($"Role '{roleName}' assigned successfully.");
 
                         break;
 
@@ -118,16 +119,17 @@ public class ExecutePlanHandler : IRequestHandler<ExecutePlanRequest, AgentExecu
                 }
             }
 
-            _logger.LogInformation(
-                "ExecutePlanHandler completed successfully.");
+            await uow.CommitAsync();
+
+            _logger.LogInformation("ExecutePlanHandler completed successfully.");
 
             return result;
         }
         catch (Exception ex)
         {
-            _logger.LogError(
-                ex,
-                "ExecutePlanHandler failed.");
+            await uow.RollbackAsync();
+
+            _logger.LogError(ex, "ExecutePlanHandler failed.");
 
             throw;
         }

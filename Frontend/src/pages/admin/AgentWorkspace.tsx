@@ -8,6 +8,7 @@ import type {
     AgentExecutionResult,
 } from "../../types/agent";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 const AgentWorkspace = () => {
     const [prompt, setPrompt] = useState("");
@@ -24,8 +25,7 @@ const AgentWorkspace = () => {
         try {
             setLoading(true);
 
-            const generatedPlan =
-                await generatePlan(prompt);
+            const generatedPlan = await generatePlan(prompt);
 
             generatedPlan.steps.forEach((step) => {
                 if (step.action === "CreateUser") {
@@ -36,7 +36,11 @@ const AgentWorkspace = () => {
 
             setPlan(generatedPlan);
             setResult(null);
-        } finally {
+        }
+        catch (error) {
+            toast.error(error instanceof Error ? error.message : "Ai plan generation failed");
+        }
+        finally {
             setLoading(false);
         }
     };
@@ -47,11 +51,20 @@ const AgentWorkspace = () => {
         try {
             setLoading(true);
 
-            const executionResult =
-                await executePlan(plan);
+            const executionResult = await executePlan(plan);
 
-            setResult(executionResult);
-        } finally {
+            setResult(executionResult.result);
+
+            if (executionResult.result.success) {
+                setPlan(null);
+                setPrompt("");
+                setShowPasswords({});
+            }
+        }
+        catch (error) {
+            toast.error(error instanceof Error ? error.message : "Ai plan execution failed");
+        }
+        finally {
             setLoading(false);
         }
     };
@@ -82,7 +95,7 @@ const AgentWorkspace = () => {
                     "Email",
                     "Username",
                     "Password",
-                    
+
                 ];
 
                 for (const field of requiredFields) {
@@ -134,6 +147,20 @@ const AgentWorkspace = () => {
         }));
     };
 
+    const handlePromptChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
+        const value = e.target.value;
+
+        setPrompt(value);
+
+        if (plan || result) {
+            setPlan(null);
+            setResult(null);
+            setShowPasswords({});
+        }
+    };
+
     return (
         <div className="space-y-6">
             <h1 className="text-2xl font-bold">
@@ -144,22 +171,22 @@ const AgentWorkspace = () => {
                 className="w-full border rounded p-3"
                 rows={4}
                 value={prompt}
-                onChange={(e) =>
-                    setPrompt(e.target.value)
-                }
+                onChange={handlePromptChange}
                 placeholder="Create Rahul as Admin"
             />
 
-            <button
-                onClick={handleGeneratePlan}
-                disabled={loading}
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
-                Generate Plan
-            </button>
+            {!plan && !result && (
+                <button
+                    onClick={handleGeneratePlan}
+                    disabled={loading || !prompt.trim()}
+                    className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                >
+                    {loading ? "Generating..." : "Generate Plan"}
+                </button>
+            )}
 
             {plan && (
-                <div className="border rounded p-4">
+                <div className="border rounded p-3 sm:p-4 overflow-hidden">
                     <h2 className="font-semibold mb-4">
                         Plan Generated
                     </h2>
@@ -167,7 +194,7 @@ const AgentWorkspace = () => {
                     {plan.steps.map((step, stepIndex) => (
                         <div
                             key={step.stepNumber}
-                            className="mb-6 rounded border p-4"
+                            className="mb-6 rounded border p-3 sm:p-4"
                         >
                             <div className="font-semibold">
                                 Step {step.stepNumber}
@@ -194,7 +221,7 @@ const AgentWorkspace = () => {
                                                 {key}
                                             </label>
 
-                                            <div className="flex gap-2">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <input
                                                     type={
                                                         isPassword
@@ -226,7 +253,7 @@ const AgentWorkspace = () => {
                                                                     key
                                                                 )
                                                             }
-                                                            className="px-3 border rounded"
+                                                            className="px-3 py-2 border rounded w-full sm:w-auto"
                                                         >
                                                             {showPasswords[
                                                                 `${stepIndex}-${key}`
@@ -246,7 +273,7 @@ const AgentWorkspace = () => {
                                                                     generatePassword()
                                                                 )
                                                             }
-                                                            className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                                                            className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 w-full sm:w-auto"
                                                         >
                                                             Generate
                                                         </button>
@@ -268,7 +295,7 @@ const AgentWorkspace = () => {
                                                                 )
                                                             );
                                                         }}
-                                                        className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                                                        className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 w-full sm:w-auto"
                                                     >
                                                         Generate
                                                     </button>
@@ -299,7 +326,7 @@ const AgentWorkspace = () => {
             )}
 
             {result && (
-                <div className="rounded border p-4">
+                <div className="rounded border border-green-300 bg-green-50 p-4">
                     <div className="font-semibold mb-2">
                         {result.success
                             ? "Plan Executed Successfully"

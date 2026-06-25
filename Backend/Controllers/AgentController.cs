@@ -23,8 +23,7 @@ public class AgentController : ControllerBase
     }
 
     [HttpPost("plan")]
-    public async Task<IActionResult> GeneratePlan(
-        AgentPromptDto request)
+    public async Task<IActionResult> GeneratePlan(AgentPromptDto request)
     {
         var plan = await _mediator.Send(
             new GeneratePlanRequest(request.Prompt));
@@ -33,8 +32,7 @@ public class AgentController : ControllerBase
     }
 
     [HttpPost("execute")]
-    public async Task<IActionResult> ExecutePlan(
-        ExecutePlanDto request)
+    public async Task<IActionResult> ExecutePlan(ExecutePlanDto request)
     {
         var result = await _mediator.Send(new ExecutePlanRequest(request.Plan));
 
