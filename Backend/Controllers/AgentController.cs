@@ -8,7 +8,7 @@ namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 public class AgentController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -25,12 +25,26 @@ const AgentWorkspace = () => {
         try {
             setLoading(true);
 
-            const generatedPlan = await generatePlan(prompt);
+            const generatedPlan =
+                await generatePlan(prompt);
+
+            if (generatedPlan.steps.length === 0) {
+                toast.error(
+                    "No valid user-management action was detected."
+                );
+
+                setPlan(null);
+                setResult(null);
+
+                return;
+            }
 
             generatedPlan.steps.forEach((step) => {
                 if (step.action === "CreateUser") {
-                    step.parameters.Password =
-                        generatePassword();
+                    if (!step.parameters.Password?.trim()) {
+                        step.parameters.Password =
+                            generatePassword();
+                    }
                 }
             });
 
@@ -38,7 +52,11 @@ const AgentWorkspace = () => {
             setResult(null);
         }
         catch (error) {
-            toast.error(error instanceof Error ? error.message : "Ai plan generation failed");
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "AI plan generation failed"
+            );
         }
         finally {
             setLoading(false);
