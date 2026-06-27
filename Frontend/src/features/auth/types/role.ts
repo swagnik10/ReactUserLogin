@@ -45,3 +45,50 @@ export interface RoleComparisonDto {
     recommendedUseCases: string[];
     securityImplications: string[];
 }
+
+export interface AskRbacQuestionRequest {
+    question: string;
+}
+
+export interface AuditScoreDto {
+    security: number;
+    maintainability: number;
+    leastPrivilege: number;
+    consistency: number;
+    overall: number;
+}
+
+export interface RoleSummaryAnalysisDto {
+    name: string;
+    reason: string;
+}
+
+export interface AuditFindingDto {
+    severity: string;
+    title: string;
+    description: string;
+}
+
+export interface AuditRecommendationDto {
+    priority: string;
+    title: string;
+    description: string;
+}
+
+export interface AskRbacQuestionResponse {
+    answer: string;
+    findings: AuditFindingDto[];
+    recommendations: AuditRecommendationDto[];
+}
+
+export interface RbacAuditDto {
+    overallRisk: string;
+    score: AuditScoreDto;
+
+    bestDesignedRole: RoleSummaryAnalysisDto;
+    mostPrivilegedRole: RoleSummaryAnalysisDto;
+    mostRestrictedRole: RoleSummaryAnalysisDto;
+
+    findings: AuditFindingDto[];
+    recommendations: AuditRecommendationDto[];
+}

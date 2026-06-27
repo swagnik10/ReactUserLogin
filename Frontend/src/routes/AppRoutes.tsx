@@ -16,6 +16,7 @@ import NotFound from "../pages/notfound/NotFound";
 import Analysis from "../pages/admin/AiAnalysis";
 import Roles from "../pages/admin/Roles";
 import AgentWorkspace from "../pages/admin/AgentWorkspace";
+import AIAudit from "../pages/admin/AIAudit";
 import { ROUTE_PATHS } from "./routePaths";
 
 const AppRoutes = () => {
@@ -44,6 +45,7 @@ const AppRoutes = () => {
           <Route path={ROUTE_PATHS.ADMIN_ROLES} element={<Roles />} />
           <Route path={ROUTE_PATHS.ADMIN_AI_ANALYSIS}element={<Analysis />} />
           <Route path={ROUTE_PATHS.USER_DETAILS}element={<UserDetails />} />
+          <Route path={ROUTE_PATHS.ADMIN_AI_AUDIT}element={<AIAudit />} />
           <Route path={ROUTE_PATHS.AGENT_WORKSPACE} element={<AgentWorkspace />}/>
         </Route>
       </Route>

@@ -1,5 +1,5 @@
 import apiClient from "../apiClient";
-import type { RoleAnalysisDto, RoleComparisonDto, RoleDto, RoleSummaryDto } from "../../features/auth/types/role";
+import type { AskRbacQuestionRequest, AskRbacQuestionResponse, RbacAuditDto, RoleAnalysisDto, RoleComparisonDto, RoleDto, RoleSummaryDto } from "../../features/auth/types/role";
 import axios from "axios";
 
 export const getRoles = async (): Promise<RoleSummaryDto[]> => {
@@ -93,4 +93,56 @@ export const compareRoles = async (
 
     throw new Error(`AI Role comparer between ${roleA} and ${roleB} failed`);
     }
+};
+
+export const askRbacQuestion = async (
+    request: AskRbacQuestionRequest
+): Promise<AskRbacQuestionResponse> => {
+
+    try{
+        const response = await apiClient.post<AskRbacQuestionResponse>(
+            "/roles/ask-ai",
+            request
+        );
+    
+        return response.data;
+    }
+    catch(error)
+    {
+        if (axios.isAxiosError(error)) {
+        throw new Error(
+            error.response?.data?.Message ||
+            error.response?.data?.message ||
+            `Ask Ai Feature failed`
+        );
+    }
+
+    throw new Error(`Ask Ai Feature failed`);
+    }
+};
+
+export const auditRbac = async (): Promise<RbacAuditDto> => {
+
+    try{
+        const response = await apiClient.post<RbacAuditDto>(
+            "/roles/audit"
+        );
+
+        return response.data;
+    }
+
+    catch(error)
+    {
+        if (axios.isAxiosError(error)) {
+        throw new Error(
+            error.response?.data?.Message ||
+            error.response?.data?.message ||
+            `Audit Ai Feature failed`
+        );
+    }
+
+    throw new Error(`Audit Ai Feature failed`);
+    }
+
+
 };
