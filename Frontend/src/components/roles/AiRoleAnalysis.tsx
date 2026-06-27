@@ -6,6 +6,26 @@ interface Props {
     onAnalyze(): void;
 }
 
+function getRiskBadgeClass(level: string) {
+
+    switch (level.toLowerCase()) {
+        case "critical":
+            return "bg-red-100 text-red-700";
+
+        case "high":
+            return "bg-orange-100 text-orange-700";
+
+        case "medium":
+            return "bg-yellow-100 text-yellow-700";
+
+        case "low":
+            return "bg-green-100 text-green-700";
+
+        default:
+            return "bg-gray-100 text-gray-700";
+    }
+}
+
 export default function AiRoleAnalysis({
     analysis,
     loading,
@@ -66,7 +86,7 @@ export default function AiRoleAnalysis({
                             Risk Level
                         </h3>
 
-                        <span className="inline-flex rounded-full bg-gray-100 px-4 py-2 font-medium">
+                        <span className={`inline-flex rounded-full bg-gray-100 px-4 py-2 font-medium ${getRiskBadgeClass(analysis.riskLevel)}`}>
                             {analysis.riskLevel}
                         </span>
                     </section>
@@ -142,7 +162,7 @@ export default function AiRoleAnalysis({
                                             {recommendation.title}
                                         </h4>
 
-                                        <span className="rounded bg-gray-100 px-2 py-1 text-xs font-medium">
+                                        <span className={`rounded bg-gray-100 px-2 py-1 text-xs font-medium ${getRiskBadgeClass(recommendation.priority)}`}>
                                             {recommendation.priority}
                                         </span>
                                     </div>

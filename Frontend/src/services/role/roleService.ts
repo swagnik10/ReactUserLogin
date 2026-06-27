@@ -1,28 +1,68 @@
 import apiClient from "../apiClient";
 import type { RoleAnalysisDto, RoleDto, RoleSummaryDto } from "../../features/auth/types/role";
+import axios from "axios";
 
 export const getRoles = async (): Promise<RoleSummaryDto[]> => {
-    const response = await apiClient.get<RoleSummaryDto[]>("/roles");
+    try{
+        const response = await apiClient.get<RoleSummaryDto[]>("/roles");
+    
+        return response.data;
+    }
+    catch (error) {
+    if (axios.isAxiosError(error)) {
+        throw new Error(
+            error.response?.data?.Message ||
+            error.response?.data?.message ||
+            "Get role summary failed"
+        );
+    }
 
-    return response.data;
+    throw new Error("Get role summary failed");
+  }
 };
 
 export const getRole = async (
     roleName: string
 ): Promise<RoleDto> => {
-    const response = await apiClient.get<RoleDto>(
-        `/roles/${roleName}`
-    );
+    try{
+        const response = await apiClient.get<RoleDto>(
+            `/roles/${roleName}`
+        );
+    
+        return response.data;
+    }
+    catch (error) {
+    if (axios.isAxiosError(error)) {
+        throw new Error(
+            error.response?.data?.Message ||
+            error.response?.data?.message ||
+            `Get role ${roleName} failed`
+        );
+    }
 
-    return response.data;
+    throw new Error(`Get role ${roleName} failed`);
+  }
 };
 
 export const analyzeRole = async (
     roleName: string
 ): Promise<RoleAnalysisDto> => {
-    const response = await apiClient.get<RoleAnalysisDto>(
-        `/roles/${roleName}/analyze`
-    );
+    try{
+        const response = await apiClient.get<RoleAnalysisDto>(
+            `/roles/${roleName}/analyze`
+        );
+    
+        return response.data;
+    }
+    catch (error) {
+    if (axios.isAxiosError(error)) {
+        throw new Error(
+            error.response?.data?.Message ||
+            error.response?.data?.message ||
+            `AI Role ${roleName} Analyze failed`
+        );
+    }
 
-    return response.data;
+    throw new Error(`AI role ${roleName} analyze failed`);
+  }
 };
