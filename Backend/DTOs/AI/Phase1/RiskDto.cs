@@ -1,4 +1,4 @@
-﻿namespace Backend.DTOs.AI;
+﻿namespace Backend.DTOs.AI.Phase1;
 
 public class RiskDto
 {

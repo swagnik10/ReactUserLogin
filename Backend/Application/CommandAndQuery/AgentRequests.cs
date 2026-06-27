@@ -1,5 +1,6 @@
 ﻿using Backend.DTOs.Agent;
-using Backend.DTOs.AI;
+using Backend.DTOs.AI.Phase1;
+using Backend.DTOs.AI.Phase2;
 using MediatR;
 
 namespace Backend.Application.CommandAndQuery;

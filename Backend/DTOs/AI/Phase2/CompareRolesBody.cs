@@ -1,4 +1,4 @@
-﻿namespace Backend.DTOs.AI;
+﻿namespace Backend.DTOs.AI.Phase2;
 
 public class CompareRolesBody
 {

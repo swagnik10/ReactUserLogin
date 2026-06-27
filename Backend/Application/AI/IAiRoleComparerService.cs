@@ -1,4 +1,4 @@
-﻿using Backend.DTOs.AI;
+﻿using Backend.DTOs.AI.Phase2;
 
 namespace Backend.Application.AI;
 

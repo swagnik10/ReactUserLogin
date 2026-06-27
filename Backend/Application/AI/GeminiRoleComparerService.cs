@@ -1,123 +1,36 @@
 ﻿using System.Text.Json;
+using Backend.Application.AI.Gemini;
 using Backend.DTOs.Agent;
-using Backend.DTOs.AI;
+using Backend.DTOs.AI.Phase2;
 using Microsoft.Extensions.Options;
 
 namespace Backend.Application.AI;
 
-public class GeminiRoleComparerService : IAiRoleComparerService
+public class GeminiRoleComparerService : GeminiBaseService, IAiRoleComparerService
 {
-    private readonly HttpClient _httpClient;
-    private readonly GeminiSettings _settings;
     private readonly ILogger<GeminiRoleComparerService> _logger;
 
     public GeminiRoleComparerService(
         HttpClient httpClient,
         IOptions<GeminiSettings> settings,
         ILogger<GeminiRoleComparerService> logger)
+        : base(httpClient, settings, logger)
     {
-        _httpClient = httpClient;
-        _settings = settings.Value;
         _logger = logger;
     }
 
-    public async Task<RoleComparisonDto> CompareRolesAsync(
-        RoleComparisonRequest request,
-        CancellationToken cancellationToken)
+    public Task<RoleComparisonDto> CompareRolesAsync(
+    RoleComparisonRequest request,
+    CancellationToken cancellationToken)
     {
-        var prompt = BuildPrompt(request);
-
-        var requestBody = new
-        {
-            contents = new[]
-            {
-                new
-                {
-                    parts = new[]
-                    {
-                        new
-                        {
-                            text = prompt
-                        }
-                    }
-                }
-            },
-
-            generationConfig = new
-            {
-                responseMimeType = "application/json",
-                responseSchema = BuildResponseSchema()
-            }
-        };
-
-        var endpoint =
-            $"https://generativelanguage.googleapis.com/v1beta/models/{_settings.Model}:generateContent?key={_settings.ApiKey}";
-
-        var response =
-            await _httpClient.PostAsJsonAsync(
-                endpoint,
-                requestBody,
-                cancellationToken);
-
-        response.EnsureSuccessStatusCode();
-
-        var rawResponse =
-            await response.Content.ReadAsStringAsync(
-                cancellationToken);
-
-        _logger.LogInformation(
-            "Gemini Role Comparison Response: {Response}",
-            rawResponse);
-
-        using var document =
-            JsonDocument.Parse(rawResponse);
-
-        var text =
-            document.RootElement
-                .GetProperty("candidates")[0]
-                .GetProperty("content")
-                .GetProperty("parts")[0]
-                .GetProperty("text")
-                .GetString();
-
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            throw new Exception("Gemini returned an empty comparison.");
-        }
-
-        text = CleanJson(text);
-
-        var comparison =
-            JsonSerializer.Deserialize<RoleComparisonDto>(
-                text,
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-        if (comparison == null)
-        {
-            throw new Exception("Failed to deserialize role comparison.");
-        }
-
-        return comparison;
+        _logger.LogInformation("Inside the AI Role Comparer Method");
+        return GenerateAsync<RoleComparisonDto>(
+            BuildPrompt(request),
+            BuildResponseSchema(),
+            "Role Comparison",
+            cancellationToken);
     }
-    private static string CleanJson(string json)
-    {
-        json = json.Trim();
 
-        if (json.StartsWith("```json"))
-        {
-            json = json.Replace("```json", "");
-        }
-
-        if (json.EndsWith("```"))
-        {
-            json = json.Replace("```", "");
-        }
-
-        return json.Trim();
-    }
     private static string BuildPrompt(RoleComparisonRequest request)
     {
         var requestJson = JsonSerializer.Serialize(

@@ -2,6 +2,7 @@
 using Backend.Application.CommandAndQuery;
 using Backend.Application.Service;
 using Backend.DTOs.AI;
+using Backend.DTOs.AI.Phase1;
 using MediatR;
 
 namespace Backend.Application.Handlers.RoleHandler;

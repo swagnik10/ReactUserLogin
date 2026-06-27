@@ -1,7 +1,8 @@
 ﻿using Backend.Application.CommandAndQuery;
 using Backend.Application.Service;
 using Backend.Authorization;
-using Backend.DTOs.AI;
+using Backend.DTOs.AI.Phase1;
+using Backend.DTOs.AI.Phase2;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;

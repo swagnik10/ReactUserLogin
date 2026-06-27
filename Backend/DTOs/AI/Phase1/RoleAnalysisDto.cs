@@ -1,6 +1,7 @@
-﻿using Backend.Enum_And_Constants;
+﻿using Backend.DTOs.AI.Phase2;
+using Backend.Enum_And_Constants;
 
-namespace Backend.DTOs.AI;
+namespace Backend.DTOs.AI.Phase1;
 
 public class RoleAnalysisDto
 {

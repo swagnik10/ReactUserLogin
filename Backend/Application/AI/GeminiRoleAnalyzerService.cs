@@ -1,130 +1,34 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using Backend.Application.AI.Gemini;
 using Backend.DTOs.Agent;
-using Backend.DTOs.AI;
-using Backend.Enum_And_Constants;
+using Backend.DTOs.AI.Phase1;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace Backend.Application.AI;
 
-public class GeminiRoleAnalyzerService : IAiRoleAnalyzerService
+public class GeminiRoleAnalyzerService : GeminiBaseService, IAiRoleAnalyzerService
 {
-    private readonly HttpClient _httpClient;
-    private readonly GeminiSettings _settings;
     private readonly ILogger<GeminiRoleAnalyzerService> _logger;
 
     public GeminiRoleAnalyzerService(
         HttpClient httpClient,
         IOptions<GeminiSettings> settings,
-        ILogger<GeminiRoleAnalyzerService> logger)
+        ILogger<GeminiRoleAnalyzerService> logger) : base(httpClient, settings, logger)
     {
-        _httpClient = httpClient;
-        _settings = settings.Value;
         _logger = logger;
     }
 
-    public async Task<RoleAnalysisDto> AnalyzeRoleAsync(
-        RoleAnalysisRequest request,
-        CancellationToken cancellationToken)
+    public Task<RoleAnalysisDto> AnalyzeRoleAsync(
+    RoleAnalysisRequest request,
+    CancellationToken cancellationToken)
     {
-        var prompt = BuildPrompt(request);
-
-        var requestBody = new
-        {
-            contents = new[]
-            {
-                new
-                {
-                    parts = new[]
-                    {
-                        new
-                        {
-                            text = prompt
-                        }
-                    }
-                }
-            },
-
-            generationConfig = new
-            {
-                responseMimeType = "application/json",
-                responseSchema = BuildResponseSchema()
-            }
-        };
-
-        var endpoint =
-            $"https://generativelanguage.googleapis.com/v1beta/models/{_settings.Model}:generateContent?key={_settings.ApiKey}";
-
-        var response =
-            await _httpClient.PostAsJsonAsync(
-                endpoint,
-                requestBody,
-                cancellationToken);
-
-        response.EnsureSuccessStatusCode();
-
-        var rawResponse =
-            await response.Content.ReadAsStringAsync(cancellationToken);
-
-        _logger.LogInformation(
-            "Gemini Role Analysis Response: {Response}",
-            rawResponse);
-
-        using var document = JsonDocument.Parse(rawResponse);
-
-        var text =
-            document.RootElement
-                .GetProperty("candidates")[0]
-                .GetProperty("content")
-                .GetProperty("parts")[0]
-                .GetProperty("text")
-                .GetString();
-
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            throw new Exception("Gemini returned an empty analysis.");
-        }
-
-        text = CleanJson(text);
-
-        var analysis =
-            JsonSerializer.Deserialize<RoleAnalysisDto>(
-                text,
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    Converters =
-                    {
-                        new JsonStringEnumConverter()
-                    },
-                    
-                });
-
-        if (analysis == null)
-        {
-            throw new Exception("Failed to deserialize role analysis.");
-        }
-        
-        return analysis;
+        _logger.LogInformation("Inside the Ai Role Analyzer Method");
+        return GenerateAsync<RoleAnalysisDto>(
+            BuildPrompt(request),
+            BuildResponseSchema(),
+            "Role Analysis",
+            cancellationToken);
     }
-
-    private static string CleanJson(string json)
-    {
-        json = json.Trim();
-
-        if (json.StartsWith("```json"))
-        {
-            json = json.Replace("```json", "");
-        }
-
-        if (json.EndsWith("```"))
-        {
-            json = json.Replace("```", "");
-        }
-
-        return json.Trim();
-    }
-
     private static string BuildPrompt(RoleAnalysisRequest request)
     {
         var roleJson = JsonSerializer.Serialize(
