@@ -64,11 +64,11 @@ const Sidebar = ({
             </NavLink>
 
             <NavLink
-              to={ROUTE_PATHS.ADMIN_SETTINGS}
+              to={ROUTE_PATHS.ADMIN_AI_ANALYSIS}
               onClick={onClose}
               className="px-6 py-3 hover:bg-slate-800"
             >
-              Settings
+              AI Analysis
             </NavLink>
             <NavLink to={ROUTE_PATHS.AGENT_WORKSPACE}
             onClick={onClose}

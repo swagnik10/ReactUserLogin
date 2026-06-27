@@ -9,7 +9,7 @@ export const ROUTE_PATHS = {
   ADMIN: "/admin",
   ADMIN_USERS: "/admin/users",
   ADMIN_ROLES: "/admin/roles",
-  ADMIN_SETTINGS: "/admin/settings",
+  ADMIN_AI_ANALYSIS: "/admin/analysis",
 
   USER_DETAILS: "/user/:id",
   AGENT_WORKSPACE: "/admin/agent",

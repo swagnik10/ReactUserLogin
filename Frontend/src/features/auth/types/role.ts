@@ -35,3 +35,13 @@ export interface RoleAnalysisDto {
     riskLevel: string;
     recommendations: RecommendationDto[];
 }
+
+export interface RoleComparisonDto {
+    summary: string;
+    similarities: string[];
+    differences: string[];
+    permissionsOnlyInRoleA: string[];
+    permissionsOnlyInRoleB: string[];
+    recommendedUseCases: string[];
+    securityImplications: string[];
+}

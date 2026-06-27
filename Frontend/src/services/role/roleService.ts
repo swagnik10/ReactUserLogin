@@ -1,5 +1,5 @@
 import apiClient from "../apiClient";
-import type { RoleAnalysisDto, RoleDto, RoleSummaryDto } from "../../features/auth/types/role";
+import type { RoleAnalysisDto, RoleComparisonDto, RoleDto, RoleSummaryDto } from "../../features/auth/types/role";
 import axios from "axios";
 
 export const getRoles = async (): Promise<RoleSummaryDto[]> => {
@@ -65,4 +65,32 @@ export const analyzeRole = async (
 
     throw new Error(`AI role ${roleName} analyze failed`);
   }
+};
+
+export const compareRoles = async (
+    roleA: string,
+    roleB: string
+): Promise<RoleComparisonDto> => {
+    try{
+        const response = await apiClient.post<RoleComparisonDto>(
+            "/roles/compare",
+            {
+                roleA,
+                roleB,
+            });
+    
+        return response.data;
+    }
+    catch(error)
+    {
+        if (axios.isAxiosError(error)) {
+        throw new Error(
+            error.response?.data?.Message ||
+            error.response?.data?.message ||
+            `AI Role comparer between ${roleA} and ${roleB} failed`
+        );
+    }
+
+    throw new Error(`AI Role comparer between ${roleA} and ${roleB} failed`);
+    }
 };
