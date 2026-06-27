@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRole, getRoles } from "../../services/role/roleService";
-import type { RoleDto, RoleSummaryDto } from "../../types/role";
+import type { RoleDto, RoleSummaryDto } from "../../features/auth/types/role";
 import RoleList from "../../components/roles/RoleList";
 import PermissionMatrix from "../../components/roles/PermissionMatrix";
 

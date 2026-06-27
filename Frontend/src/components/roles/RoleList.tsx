@@ -1,4 +1,4 @@
-import type { RoleSummaryDto } from "../../types/role";
+import type { RoleSummaryDto } from "../../features/auth/types/role";
 
 interface Props {
     roles: RoleSummaryDto[];

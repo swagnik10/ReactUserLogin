@@ -1,4 +1,4 @@
-import type { RoleDto } from "../../types/role";
+import type { RoleDto } from "../../features/auth/types/role";
 
 interface Props {
     role: RoleDto | null;

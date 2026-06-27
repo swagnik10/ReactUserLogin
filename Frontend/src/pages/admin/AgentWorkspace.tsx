@@ -6,7 +6,7 @@ import {
 import type {
     AgentPlan,
     AgentExecutionResult,
-} from "../../types/agent";
+} from "../../features/auth/types/agent";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 

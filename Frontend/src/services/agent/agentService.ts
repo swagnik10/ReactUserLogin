@@ -2,7 +2,7 @@ import apiClient from "../apiClient";
 import type {
   AgentPlan,
   ExecutePlanResponse,
-} from "../../types/agent";
+} from "../../features/auth/types/agent";
 import axios from "axios";
 
 export const generatePlan = async (

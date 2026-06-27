@@ -23,6 +23,7 @@ public static class RolePermissions
                 Permissions.Users.Delete,
                 Permissions.Users.AssignRole,
                 Permissions.Roles.View,
+                Permissions.AI.Audit,
                 Permissions.AI.Execute
             ],
 
