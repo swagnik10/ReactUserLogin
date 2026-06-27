@@ -15,3 +15,23 @@ export interface RoleSummaryDto {
     permissionCount: number;
     description: string;
 }
+
+export interface RiskDto {
+    type: string;
+    description: string;
+}
+
+export interface RecommendationDto {
+    title: string;
+    priority: string;
+    description: string;
+}
+
+export interface RoleAnalysisDto {
+    summary: string;
+    capabilities: string[];
+    restrictions: string[];
+    risks: RiskDto[];
+    riskLevel: string;
+    recommendations: RecommendationDto[];
+}
