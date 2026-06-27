@@ -5,18 +5,18 @@ public static class RolePermissions
     public static readonly Dictionary<string, HashSet<string>> Map =
         new()
         {
-            ["User"] =
+            [Roles.User] =
             [
                 Permissions.Users.View
             ],
 
-            ["PowerUser"] =
+            [Roles.PowerUser] =
             [
                 Permissions.Users.View,
                 Permissions.Users.Edit
             ],
 
-            ["Admin"] =
+            [Roles.Admin] =
             [
                 Permissions.Users.View,
                 Permissions.Users.Edit,
@@ -26,7 +26,7 @@ public static class RolePermissions
                 Permissions.AI.Execute
             ],
 
-            ["SystemAdministrator"] =
+            [Roles.SystemAdministrator] =
             [
                 Permissions.Users.View,
                 Permissions.Users.Edit,

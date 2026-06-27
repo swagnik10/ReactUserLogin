@@ -1,4 +1,6 @@
 using Backend.Application.Agents;
+using Backend.Application.Service;
+using Backend.Application.Services;
 using Backend.Authorization;
 using Backend.DbConnection;
 using Backend.DTOs.Agent;
@@ -50,6 +52,7 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
 
 builder.Services.AddScoped<NHibernate.ISession>(sp =>
 {
