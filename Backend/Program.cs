@@ -1,4 +1,5 @@
 using Backend.Application.Agents;
+using Backend.Application.AI;
 using Backend.Application.Service;
 using Backend.Application.Services;
 using Backend.Authorization;
@@ -14,13 +15,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(
+        new JsonStringEnumConverter());
+});
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -68,6 +75,7 @@ builder.Services.Configure<GeminiSettings>(
     builder.Configuration.GetSection("Gemini"));
 
 builder.Services.AddHttpClient<IAiPlannerService, GeminiPlannerService>();
+builder.Services.AddHttpClient<IAiRoleAnalyzerService, GeminiRoleAnalyzerService>();
 
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 

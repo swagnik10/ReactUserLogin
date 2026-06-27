@@ -1,5 +1,9 @@
-﻿using Backend.Application.Service;
+﻿using Backend.Application.CommandAndQuery;
+using Backend.Application.Service;
 using Backend.Authorization;
+using Backend.DTOs.AI;
+using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
@@ -9,10 +13,12 @@ namespace Backend.Controllers;
 public class RolesController : ControllerBase
 {
     private readonly IRolePermissionService _rolePermissionService;
+    private readonly IMediator _mediator;
 
-    public RolesController(IRolePermissionService rolePermissionService)
+    public RolesController(IRolePermissionService rolePermissionService, IMediator mediator)
     {
         _rolePermissionService = rolePermissionService;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -32,5 +38,13 @@ public class RolesController : ControllerBase
             return NotFound();
 
         return Ok(role);
+    }
+
+    [HttpGet("{roleName}/analyze")]
+    public async Task<ActionResult<RoleAnalysisDto>> AnalyzeRole(string roleName, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new AnalyzeRoleRequest(roleName), cancellationToken);
+
+        return Ok(result);
     }
 }
