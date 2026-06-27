@@ -3,6 +3,7 @@ using Backend.Application.Service;
 using Backend.Authorization;
 using Backend.DTOs.AI.Phase1;
 using Backend.DTOs.AI.Phase2;
+using Backend.DTOs.AI.Phase3;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +72,37 @@ public class RolesController : ControllerBase
             cancellationToken);
 
         _logger.LogInformation("AI Role Comparer API Ends");
+
+        return Ok(result);
+    }
+
+    [HttpPost("audit")]
+    public async Task<ActionResult<RbacAuditDto>> Audit(
+    CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("AI Role Audit API Starts");
+
+        var result = await _mediator.Send(
+            new AuditRbacRequest(),
+            cancellationToken);
+
+        _logger.LogInformation("AI Role Audit API Ends");
+
+        return Ok(result);
+    }
+
+    [HttpPost("ask-ai")]
+    public async Task<ActionResult<AskRbacQuestionResponse>> AskAi(
+    [FromBody] AskRbacQuestionRequest request,
+    CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Ask AI API Starts");
+
+        var result = await _mediator.Send(
+            new AskRbacQuestion(request.Question),
+            cancellationToken);
+
+        _logger.LogInformation("Ask AI API Ends");
 
         return Ok(result);
     }

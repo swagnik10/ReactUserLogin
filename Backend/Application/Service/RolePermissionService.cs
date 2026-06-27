@@ -50,4 +50,22 @@ public class RolePermissionService : IRolePermissionService
             Granted = grantedPermissions.Contains(permission)
         };
     }
+
+    public IEnumerable<RoleDto> GetRolesWithPermissions()
+    {
+        return RolePermissions.Map.Select(role => new RoleDto
+        {
+            Name = role.Key,
+
+            Description = role.Key,
+
+            Permissions = role.Value
+                .Select(permission => new PermissionDto
+                {
+                    Name = permission,
+                    Granted = true
+                })
+                .ToList()
+        });
+    }
 }

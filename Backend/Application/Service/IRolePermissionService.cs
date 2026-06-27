@@ -7,4 +7,6 @@ public interface IRolePermissionService
     IEnumerable<RoleSummaryDto> GetRoles();
 
     RoleDto? GetRole(string roleName);
+
+    IEnumerable<RoleDto> GetRolesWithPermissions();
 }
