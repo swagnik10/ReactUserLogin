@@ -1,4 +1,5 @@
 using Backend.Application.Agents;
+using Backend.Authorization;
 using Backend.DbConnection;
 using Backend.DTOs.Agent;
 using Backend.Mapper;
@@ -7,6 +8,7 @@ using Backend.Repositories;
 using Backend.Secutity;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
@@ -64,13 +66,14 @@ builder.Services.Configure<GeminiSettings>(
 
 builder.Services.AddHttpClient<IAiPlannerService, GeminiPlannerService>();
 
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+
 var jwtSection = builder.Configuration.GetSection("Jwt");
 
 var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
 
 builder.Services
-    .AddAuthentication(
-        JwtBearerDefaults.AuthenticationScheme)
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters =
@@ -81,15 +84,22 @@ builder.Services
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer =
-                    jwtSection["Issuer"],
+                ValidIssuer = jwtSection["Issuer"],
+                ValidAudience = jwtSection["Audience"],
 
-                ValidAudience =
-                    jwtSection["Audience"],
-
-                IssuerSigningKey =
-                    new SymmetricSecurityKey(key)
+                IssuerSigningKey = new SymmetricSecurityKey(key)
             };
+    })
+    .Services
+    .AddAuthorization(options =>
+    {
+        foreach (var permission in Permissions.All)
+        {
+            options.AddPolicy(permission, policy =>
+            {
+                policy.Requirements.Add(new PermissionRequirement(permission));
+            });
+        }
     });
 
 builder.Services.AddMediatR(cfg =>

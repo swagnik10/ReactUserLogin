@@ -1,4 +1,5 @@
 ﻿using Backend.Application.CommandAndQuery;
+using Backend.Authorization;
 using Backend.DTOs.Agent;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")]
 public class AgentController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -22,6 +22,7 @@ public class AgentController : ControllerBase
         _logger = logger;
     }
 
+    [HasPermission(Permissions.AI.Audit)]
     [HttpPost("plan")]
     public async Task<IActionResult> GeneratePlan(AgentPromptDto request)
     {
@@ -30,7 +31,7 @@ public class AgentController : ControllerBase
 
         return Ok(plan);
     }
-
+    [HasPermission(Permissions.AI.Execute)]
     [HttpPost("execute")]
     public async Task<IActionResult> ExecutePlan(ExecutePlanDto request)
     {
