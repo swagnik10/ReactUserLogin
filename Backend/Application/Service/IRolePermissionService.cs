@@ -4,7 +4,7 @@ namespace Backend.Application.Service;
 
 public interface IRolePermissionService
 {
-    IEnumerable<RoleDto> GetRoles();
+    IEnumerable<RoleSummaryDto> GetRoles();
 
     RoleDto? GetRole(string roleName);
 }

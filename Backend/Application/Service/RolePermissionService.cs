@@ -6,9 +6,14 @@ namespace Backend.Application.Services;
 
 public class RolePermissionService : IRolePermissionService
 {
-    public IEnumerable<RoleDto> GetRoles()
+    public IEnumerable<RoleSummaryDto> GetRoles()
     {
-        return RolePermissions.Map.Keys.Select(CreateRoleDto);
+        return RolePermissions.Map.Select(role => new RoleSummaryDto
+        {
+            Name = role.Key,
+
+            PermissionCount = role.Value.Count
+        });
     }
 
     public RoleDto? GetRole(string roleName)
@@ -30,7 +35,9 @@ public class RolePermissionService : IRolePermissionService
             Permissions = Permissions.All
             .OrderBy(p => p)
             .Select(permission => CreatePermissionDto(permission, grantedPermissions))
-            .ToList()
+            .ToList(),
+
+            Description = RoleMetadata.Descriptions.GetValueOrDefault(roleName, string.Empty)
         };
     }
 

@@ -39,11 +39,11 @@ const AppRoutes = () => {
       {/* Admin */}
       <Route element={<AdminRoute />}>
         <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<UserManagement />} />
-          <Route path="/admin/roles" element={<Roles />} />
-          <Route path="/admin/settings" element={<Settings />} />
-          <Route path="/user/:id" element={<UserDetails />} />
+          <Route path={ROUTE_PATHS.ADMIN} element={<AdminDashboard />} />
+          <Route path={ROUTE_PATHS.ADMIN_USERS} element={<UserManagement />} />
+          <Route path={ROUTE_PATHS.ADMIN_ROLES} element={<Roles />} />
+          <Route path={ROUTE_PATHS.ADMIN_SETTINGS}element={<Settings />} />
+          <Route path={ROUTE_PATHS.USER_DETAILS}element={<UserDetails />} />
           <Route path={ROUTE_PATHS.AGENT_WORKSPACE} element={<AgentWorkspace />}/>
         </Route>
       </Route>
