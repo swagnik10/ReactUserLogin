@@ -76,6 +76,7 @@ builder.Services.Configure<GeminiSettings>(
 
 builder.Services.AddHttpClient<IAiPlannerService, GeminiPlannerService>();
 builder.Services.AddHttpClient<IAiRoleAnalyzerService, GeminiRoleAnalyzerService>();
+builder.Services.AddHttpClient<IAiRoleComparerService, GeminiRoleComparerService>();
 
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 

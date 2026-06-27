@@ -14,11 +14,13 @@ public class RolesController : ControllerBase
 {
     private readonly IRolePermissionService _rolePermissionService;
     private readonly IMediator _mediator;
+    private readonly ILogger<RolesController> _logger;
 
-    public RolesController(IRolePermissionService rolePermissionService, IMediator mediator)
+    public RolesController(IRolePermissionService rolePermissionService, IMediator mediator, ILogger<RolesController> logger)
     {
         _rolePermissionService = rolePermissionService;
         _mediator = mediator;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -32,10 +34,14 @@ public class RolesController : ControllerBase
     [HasPermission(Permissions.Roles.View)]
     public IActionResult GetRole(string roleName)
     {
+        _logger.LogInformation("Get {RoleName} execution Starts", roleName);
+
         var role = _rolePermissionService.GetRole(roleName);
 
         if (role is null)
             return NotFound();
+
+        _logger.LogInformation("Get {RoleName} execution Ends", roleName);
 
         return Ok(role);
     }
@@ -43,7 +49,27 @@ public class RolesController : ControllerBase
     [HttpGet("{roleName}/analyze")]
     public async Task<ActionResult<RoleAnalysisDto>> AnalyzeRole(string roleName, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("AI Analyze of {RoleName} Starts", roleName);
+
         var result = await _mediator.Send(new AnalyzeRoleRequest(roleName), cancellationToken);
+
+        _logger.LogInformation("AI Analyze of {RoleName} Ends", roleName);
+
+        return Ok(result);
+    }
+
+    [HttpPost("compare")]
+    public async Task<ActionResult<RoleComparisonDto>> CompareRoles(CompareRolesBody body, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("AI Role Comparer API Starts");
+
+        var result = await _mediator.Send(
+            new CompareRolesRequest(
+                body.RoleA,
+                body.RoleB),
+            cancellationToken);
+
+        _logger.LogInformation("AI Role Comparer API Ends");
 
         return Ok(result);
     }
