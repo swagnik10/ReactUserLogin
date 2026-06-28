@@ -1,4 +1,5 @@
 import { useAppSelector } from "../../app/hooks";
+import AiFunSection from "../../components/ai-fun/AiFunSection";
 
 const Dashboard = () => {
   const user = useAppSelector(
@@ -36,6 +37,7 @@ const Dashboard = () => {
           <p>{user?.role}</p>
         </div>
       </div>
+       <AiFunSection />
     </div>
   );
 };

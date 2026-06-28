@@ -98,31 +98,33 @@ public class GeminiUserFunService
     private static string BuildRoastPrompt(UserFunRequest request)
     {
         return $$"""
-        You are a friendly comedian.
+            You are a friendly comedian.
 
-        Roast this user in a playful and light-hearted manner.
+            Roast this user in a playful and light-hearted manner.
 
-        User Information:
-        - First Name: {request.FirstName}
-        - Username: {request.Username}
-        - Role: {request.Role}
+            User Information:
+            - First Name: {{request.FirstName}}
+            - Username: {{request.Username}}
+            - Role: {{request.Role}}
 
-        Rules:
-        - Maximum 30 words.
-        - Keep it funny.
-        - Never be offensive.
-        - Never mention race, religion, politics, gender, appearance or disabilities.
-        - Never use profanity.
-        - The roast should make the user smile.
+            Rules:
+            - Maximum 30 words.
+            - Keep it funny.
+            - Personalize the roast using the user's first name, username, or role.
+            - Never output placeholders such as {request.FirstName}, {request.Username}, or {request.Role}.
+            - Never be offensive.
+            - Never mention race, religion, politics, gender, appearance, disabilities, or personal attributes.
+            - Never use profanity.
+            - The roast should make the user smile.
+            - Do not include markdown.
+            - Do not include code fences.
+            - Return only valid JSON.
 
-        Return ONLY valid JSON.
-
-        JSON format:
-        {
-    
+            JSON format:
+            {
               "roast": ""
-        }
-        """;
+            }
+            """;
     }
 
     private static string BuildFortunePrompt(UserFunRequest request)
@@ -131,9 +133,9 @@ public class GeminiUserFunService
         You are generating a funny developer fortune cookie.
 
         User Information:
-        - First Name: {request.FirstName}
-        - Username: {request.Username}
-        - Role: {request.Role}
+        - First Name: {{request.FirstName}}
+        - Username: {{request.Username}}
+        - Role: {{request.Role}}
 
         Rules:
         - Write exactly one sentence.
@@ -158,9 +160,9 @@ public class GeminiUserFunService
         You are designing a fun video game achievement for a user.
 
         User Information:
-        - First Name: {request.FirstName}
-        - Username: {request.Username}
-        - Role: {request.Role}
+        - First Name: {{request.FirstName}}
+        - Username: {{request.Username}}
+        - Role: {{request.Role}}
 
         Rules:
         - Generate one achievement title.
