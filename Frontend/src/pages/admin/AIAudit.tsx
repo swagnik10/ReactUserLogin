@@ -23,75 +23,79 @@ const AIAudit = () => {
     const disableTabs = loadingAsk || loadingAudit;
 
     return (
-        <div className="container py-4">
-
-            <div className="card shadow-sm">
-
-                <div className="card-body">
-
-                    <h2 className="card-title mb-2">
+        <div className="mx-auto max-w-7xl p-6">
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div className="p-6">
+                    <h1 className="text-2xl font-bold text-gray-900">
                         AI RBAC Analysis
-                    </h2>
+                    </h1>
 
-                    <p className="text-muted mb-4">
+                    <p className="mt-2 text-gray-600">
                         Use AI to ask questions about your RBAC model or run a
                         complete security audit.
                     </p>
 
-                    <ul className="nav nav-tabs mb-4">
-
-                        <li className="nav-item">
-
+                    {/* Tabs */}
+                    <div className="mt-6 border-b border-gray-200">
+                        <nav className="flex gap-8">
                             <button
-                                className={`nav-link ${
-                                    activeTab === "ask" ? "active" : ""
-                                }`}
+                                type="button"
                                 disabled={disableTabs}
                                 onClick={() => setActiveTab("ask")}
+                                className={`border-b-2 px-1 py-3 text-sm font-medium transition-colors ${
+                                    activeTab === "ask"
+                                        ? "border-blue-600 text-blue-600"
+                                        : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                                } ${
+                                    disableTabs
+                                        ? "cursor-not-allowed opacity-50"
+                                        : "cursor-pointer"
+                                }`}
                             >
                                 Ask AI about RBAC
                             </button>
 
-                        </li>
-
-                        <li className="nav-item">
-
                             <button
-                                className={`nav-link ${
-                                    activeTab === "audit" ? "active" : ""
-                                }`}
+                                type="button"
                                 disabled={disableTabs}
                                 onClick={() => setActiveTab("audit")}
+                                className={`border-b-2 px-1 py-3 text-sm font-medium transition-colors ${
+                                    activeTab === "audit"
+                                        ? "border-blue-600 text-blue-600"
+                                        : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                                } ${
+                                    disableTabs
+                                        ? "cursor-not-allowed opacity-50"
+                                        : "cursor-pointer"
+                                }`}
                             >
                                 RBAC Security Audit
                             </button>
+                        </nav>
+                    </div>
 
-                        </li>
+                    {/* Tab Content */}
+                    <div className="mt-6">
+                        {activeTab === "ask" && (
+                            <AskAiTab
+                                loading={loadingAsk}
+                                response={askResponse}
+                                onLoadingChange={setLoadingAsk}
+                                onResponse={setAskResponse}
+                            />
+                        )}
 
-                    </ul>
-
-                    {activeTab === "ask" && (
-                        <AskAiTab
-                            loading={loadingAsk}
-                            response={askResponse}
-                            onLoadingChange={setLoadingAsk}
-                            onResponse={setAskResponse}
-                        />
-                    )}
-
-                    {activeTab === "audit" && (
-                        <AuditTab
-                            loading={loadingAudit}
-                            response={auditResponse}
-                            onLoadingChange={setLoadingAudit}
-                            onResponse={setAuditResponse}
-                        />
-                    )}
-
+                        {activeTab === "audit" && (
+                            <AuditTab
+                                loading={loadingAudit}
+                                response={auditResponse}
+                                onLoadingChange={setLoadingAudit}
+                                onResponse={setAuditResponse}
+                            />
+                        )}
+                    </div>
                 </div>
-
             </div>
-
         </div>
     );
 };

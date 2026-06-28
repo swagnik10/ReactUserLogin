@@ -1,6 +1,7 @@
 ﻿namespace Backend.Application.AI.Gemini;
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Backend.DTOs.Agent;
 using Microsoft.Extensions.Options;
 
@@ -89,13 +90,11 @@ public abstract class GeminiBaseService
 
         text = CleanJson(text);
 
-        var result =
-            JsonSerializer.Deserialize<T>(
-                text,
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+      
+
+    var result = JsonSerializer.Deserialize<T>(
+                    text,
+                    JsonOptions);
 
         if (result == null)
         {
@@ -122,4 +121,13 @@ public abstract class GeminiBaseService
 
         return json.Trim();
     }
+
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters =
+        {
+            new JsonStringEnumConverter()
+        }
+    };
 }

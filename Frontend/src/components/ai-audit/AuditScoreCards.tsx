@@ -32,42 +32,31 @@ const AuditScoreCards = ({
     ];
 
     return (
+        <div className="space-y-4">
 
-        <div className="mb-4">
-
-            <h4 className="mb-3">
+            <h2 className="text-xl font-semibold text-gray-900">
                 Health Scores
-            </h4>
+            </h2>
 
-            <div className="row g-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
 
-                {cards.map(card => (
+                {cards.map((card) => (
 
                     <div
                         key={card.title}
-                        className="col-md col-sm-6"
+                        className="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-sm transition hover:shadow-md"
                     >
+                        <p className="text-sm font-medium text-gray-500">
+                            {card.title}
+                        </p>
 
-                        <div className="card text-center shadow-sm h-100">
-
-                            <div className="card-body">
-
-                                <h6 className="text-muted">
-                                    {card.title}
-                                </h6>
-
-                                <h2 className="fw-bold mb-0">
-                                    {card.value}
-                                </h2>
-
-                                <small className="text-muted">
-                                    /100
-                                </small>
-
-                            </div>
-
+                        <div className="mt-3 text-4xl font-bold text-blue-600">
+                            {card.value}
                         </div>
 
+                        <p className="mt-1 text-sm text-gray-400">
+                            /100
+                        </p>
                     </div>
 
                 ))}
@@ -75,7 +64,6 @@ const AuditScoreCards = ({
             </div>
 
         </div>
-
     );
 };
 

@@ -16,54 +16,52 @@ const RoleSummaryCards = ({
         {
             title: "Best Designed Role",
             role: bestDesignedRole,
+            badge: "🏆",
         },
         {
             title: "Most Privileged Role",
             role: mostPrivilegedRole,
+            badge: "🔐",
         },
         {
             title: "Most Restricted Role",
             role: mostRestrictedRole,
+            badge: "🛡️",
         },
     ];
 
     return (
+        <div className="space-y-4">
 
-        <div className="mb-4">
-
-            <h4 className="mb-3">
+            <h2 className="text-xl font-semibold text-gray-900">
                 Role Summary
-            </h4>
+            </h2>
 
-            <div className="row g-3">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
 
-                {cards.map(card => (
+                {cards.map((card) => (
 
                     <div
                         key={card.title}
-                        className="col-md-4"
+                        className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md"
                     >
+                        <div className="flex items-center gap-2">
+                            <span className="text-2xl">
+                                {card.badge}
+                            </span>
 
-                        <div className="card h-100 shadow-sm">
-
-                            <div className="card-body">
-
-                                <h6 className="text-muted">
-                                    {card.title}
-                                </h6>
-
-                                <h5 className="fw-bold">
-                                    {card.role.name}
-                                </h5>
-
-                                <p className="mb-0">
-                                    {card.role.reason}
-                                </p>
-
-                            </div>
-
+                            <h3 className="text-sm font-medium text-gray-500">
+                                {card.title}
+                            </h3>
                         </div>
 
+                        <h4 className="mt-4 text-xl font-bold text-gray-900">
+                            {card.role.name}
+                        </h4>
+
+                        <p className="mt-2 text-sm leading-6 text-gray-600">
+                            {card.role.reason}
+                        </p>
                     </div>
 
                 ))}
@@ -71,7 +69,6 @@ const RoleSummaryCards = ({
             </div>
 
         </div>
-
     );
 
 };

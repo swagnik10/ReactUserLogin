@@ -31,59 +31,58 @@ const AuditTab = ({
 }: AuditTabProps) => {
 
     const handleAudit = async () => {
-
         try {
-
             onLoadingChange(true);
 
-            const result =
-                await auditRbac();
+            const result = await auditRbac();
 
             onResponse(result);
-
         }
         finally {
-
             onLoadingChange(false);
-
         }
-
     };
 
     return (
+        <div className="space-y-6">
 
-        <>
+            <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                    RBAC Security Audit
+                </h2>
 
-            <h4 className="mb-3">
-                RBAC Security Audit
-            </h4>
+                <p className="mt-2 text-sm text-gray-600">
+                    Run a complete AI-powered audit of every role,
+                    permission, and security practice.
+                </p>
+            </div>
 
-            <p className="text-muted">
-                Run a complete AI-powered audit of every role,
-                permission and security practice.
-            </p>
-
-            <button
-                className="btn btn-primary mb-4"
-                disabled={loading}
-                onClick={handleAudit}
-            >
-                {loading
-                    ? "Running Audit..."
-                    : "Run Audit"}
-            </button>
+            <div>
+                <button
+                    type="button"
+                    disabled={loading}
+                    onClick={handleAudit}
+                    className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+                >
+                    {loading
+                        ? "Running Audit..."
+                        : "Run Audit"}
+                </button>
+            </div>
 
             {response && (
+                <div className="space-y-6">
 
-                <>
+                    <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3">
+                        <div className="flex items-center gap-2">
+                            <span className="font-semibold text-yellow-800">
+                                Overall Risk:
+                            </span>
 
-                    <div className="alert alert-warning">
-
-                        <strong>
-                            Overall Risk:
-                        </strong>{" "}
-                        {response.overallRisk}
-
+                            <span className="text-yellow-900">
+                                {response.overallRisk}
+                            </span>
+                        </div>
                     </div>
 
                     <AuditScoreCards
@@ -104,14 +103,11 @@ const AuditTab = ({
                         recommendations={response.recommendations}
                     />
 
-                </>
-
+                </div>
             )}
 
-        </>
-
+        </div>
     );
-
 };
 
 export default AuditTab;
