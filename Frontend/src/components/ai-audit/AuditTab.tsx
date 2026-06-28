@@ -10,6 +10,7 @@ import AuditScoreCards from "./AuditScoreCards";
 import RoleSummaryCards from "./RoleSummaryCards";
 import FindingsList from "./FindingsList";
 import RecommendationList from "./RecommendationList";
+import { toast } from "sonner";
 
 interface AuditTabProps {
     loading: boolean;
@@ -37,6 +38,12 @@ const AuditTab = ({
             const result = await auditRbac();
 
             onResponse(result);
+        }
+        catch (error: any) {
+            toast.error(
+                error.message ??
+                "RBAC audit ai failed"
+            );
         }
         finally {
             onLoadingChange(false);

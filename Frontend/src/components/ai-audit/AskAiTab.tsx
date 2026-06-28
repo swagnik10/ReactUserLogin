@@ -7,6 +7,7 @@ import type {
 } from "../../features/auth/types/role";
 import FindingsList from "./FindingsList";
 import RecommendationList from "./RecommendationList";
+import { toast } from "sonner";
 
 interface AskAiTabProps {
     loading: boolean;
@@ -44,7 +45,14 @@ const AskAiTab = ({
             const result = await askRbacQuestion({ question });
 
             onResponse(result);
-        } finally {
+        }
+        catch (error: any) {
+            toast.error(
+                error.message ??
+                "Ask ai failed"
+            );
+        }
+        finally {
             onLoadingChange(false);
         }
     };
@@ -101,24 +109,24 @@ const AskAiTab = ({
             {response && (
 
                 <div className="space-y-6">
-                <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-                    <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-                        <h3 className="font-semibold text-gray-900">
-                            AI Answer
-                        </h3>
+                    <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+                        <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
+                            <h3 className="font-semibold text-gray-900">
+                                AI Answer
+                            </h3>
+                        </div>
+
+                        <div className="px-4 py-4">
+                            <p className="whitespace-pre-wrap text-sm leading-7 text-gray-700">
+                                {response.answer}
+                            </p>
+                        </div>
+
+
+
                     </div>
 
-                    <div className="px-4 py-4">
-                        <p className="whitespace-pre-wrap text-sm leading-7 text-gray-700">
-                            {response.answer}
-                        </p>
-                    </div>
-
-                    
-
-                </div>
-
-                {response.findings.length > 0 && (
+                    {response.findings.length > 0 && (
                         <FindingsList findings={response.findings} />
                     )}
 
@@ -127,7 +135,7 @@ const AskAiTab = ({
                             recommendations={response.recommendations}
                         />
                     )}
-                    </div>
+                </div>
 
 
             )}
