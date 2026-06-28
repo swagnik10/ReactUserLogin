@@ -1,4 +1,9 @@
 using Backend.Application.Agents;
+using Backend.Application.AI;
+using Backend.Application.AI.AiFun;
+using Backend.Application.Service;
+using Backend.Application.Services;
+using Backend.Authorization;
 using Backend.DbConnection;
 using Backend.DTOs.Agent;
 using Backend.Mapper;
@@ -7,16 +12,23 @@ using Backend.Repositories;
 using Backend.Secutity;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(
+        new JsonStringEnumConverter());
+});
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -48,6 +60,7 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
 
 builder.Services.AddScoped<NHibernate.ISession>(sp =>
 {
@@ -63,14 +76,20 @@ builder.Services.Configure<GeminiSettings>(
     builder.Configuration.GetSection("Gemini"));
 
 builder.Services.AddHttpClient<IAiPlannerService, GeminiPlannerService>();
+builder.Services.AddHttpClient<IAiRoleAnalyzerService, GeminiRoleAnalyzerService>();
+builder.Services.AddHttpClient<IAiRoleComparerService, GeminiRoleComparerService>();
+builder.Services.AddHttpClient<IAiRbacAuditService, GeminiRbacAuditService>();
+builder.Services.AddHttpClient<IAiRbacAssistantService, GeminiRbacAssistantService>();
+builder.Services.AddHttpClient<IAiUserFunService, GeminiUserFunService>();
+
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 
 var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
 
 builder.Services
-    .AddAuthentication(
-        JwtBearerDefaults.AuthenticationScheme)
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters =
@@ -81,15 +100,22 @@ builder.Services
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer =
-                    jwtSection["Issuer"],
+                ValidIssuer = jwtSection["Issuer"],
+                ValidAudience = jwtSection["Audience"],
 
-                ValidAudience =
-                    jwtSection["Audience"],
-
-                IssuerSigningKey =
-                    new SymmetricSecurityKey(key)
+                IssuerSigningKey = new SymmetricSecurityKey(key)
             };
+    })
+    .Services
+    .AddAuthorization(options =>
+    {
+        foreach (var permission in Permissions.All)
+        {
+            options.AddPolicy(permission, policy =>
+            {
+                policy.Requirements.Add(new PermissionRequirement(permission));
+            });
+        }
     });
 
 builder.Services.AddMediatR(cfg =>

@@ -55,7 +55,7 @@ const SignIn = () => {
 
       dispatch(loginSuccess(response));
 
-      if (response.role === "Admin" || response.role === "DemoAdmin") {
+      if (response.role === "Admin" || response.role === "SystemAdministrator") {
         navigate(ROUTE_PATHS.ADMIN);
       } else {
         navigate(ROUTE_PATHS.DASHBOARD);

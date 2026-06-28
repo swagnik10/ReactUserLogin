@@ -11,6 +11,10 @@ const UserManagement = () => {
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const hasLoaded = useRef(false);
+
+  const USERS_PER_PAGE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     if (hasLoaded.current) return;
     hasLoaded.current = true;
@@ -61,6 +65,37 @@ const UserManagement = () => {
       .includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(
+    filteredUsers.length / USERS_PER_PAGE
+  );
+
+  const startIndex = (currentPage - 1) * USERS_PER_PAGE;
+  const endIndex = startIndex + USERS_PER_PAGE;
+
+  const paginatedUsers = filteredUsers.slice(
+    startIndex,
+    endIndex
+  );
+
+  const getRoleBadgeClass = (role: string) => {
+    switch (role) {
+      case "SystemAdministrator":
+        return "bg-red-100 text-red-700";
+
+      case "Admin":
+        return "bg-purple-100 text-purple-700";
+
+      case "PowerUser":
+        return "bg-amber-100 text-amber-700";
+
+      case "User":
+        return "bg-green-100 text-green-700";
+
+      default:
+        return "bg-slate-100 text-slate-700";
+    }
+  };
+
   return (
     <>
       {loading ? <div>Loading users...</div> : (
@@ -83,9 +118,10 @@ const UserManagement = () => {
                   type="text"
                   placeholder="Search users..."
                   value={searchTerm}
-                  onChange={(e) =>
-                    setSearchTerm(e.target.value)
-                  }
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-4 focus:border-blue-500 focus:outline-none sm:w-72"
                 />
 
@@ -133,7 +169,7 @@ const UserManagement = () => {
                 <tbody className="divide-y divide-slate-200">
                   {filteredUsers.length > 0 ? (
 
-                    filteredUsers.map((user) => (
+                    paginatedUsers.map((user) => (
                       <tr
                         key={user.userId}
                         className="hover:bg-slate-50 transition-colors"
@@ -148,12 +184,9 @@ const UserManagement = () => {
 
                         <td className="px-6 py-4">
                           <span
-                            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold
-                ${user.role === "Admin" ||
-                                user.role === "DemoAdmin"
-                                ? "bg-purple-100 text-purple-700"
-                                : "bg-green-100 text-green-700"
-                              }`}
+                            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getRoleBadgeClass(
+                              user.role
+                            )}`}
                           >
                             {user.role}
                           </span>
@@ -191,6 +224,54 @@ const UserManagement = () => {
               </table>
             </div>
           </div>
+
+          {totalPages > 1 && (
+            <div className="mt-6 flex items-center justify-between">
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.max(prev - 1, 1))
+                }
+                disabled={currentPage === 1}
+                className="rounded-md border px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-100"
+              >
+                Previous
+              </button>
+
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const page = index + 1;
+
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`h-9 w-9 rounded-md text-sm font-medium transition
+              ${currentPage === page
+                          ? "bg-blue-600 text-white"
+                          : "border hover:bg-slate-100"
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) =>
+                    Math.min(prev + 1, totalPages)
+                  )
+                }
+                disabled={currentPage === totalPages}
+                className="rounded-md border px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-100"
+              >
+                Next
+              </button>
+            </div>
+          )}
+
+
           <ConfirmDialog
             isOpen={userToDelete !== null}
             title="Delete User"

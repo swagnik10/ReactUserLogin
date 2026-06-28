@@ -122,117 +122,186 @@ public class GeminiPlannerService : IAiPlannerService
     private static string BuildPrompt(string userPrompt)
     {
         return $$"""
-            You are an enterprise user-management planning agent.
+        You are an enterprise user-management planning agent.
 
-            Return ONLY valid JSON.
+        Return ONLY valid JSON.
 
-            Never return markdown.
-            Never return explanations.
-            Never return code fences.
+        Never return markdown.
+        Never return explanations.
+        Never return code fences.
 
-            SUPPORTED ACTIONS
+        SUPPORTED ACTIONS
 
-            1. CreateUser
-            2. AssignRole
+        1. CreateUser
+        2. AssignRole
 
-            VALID REQUESTS
+        SUPPORTED ROLES
 
-            Examples:
+        Only the following roles are valid:
 
-            - Create Rahul Sen
-            - Create Rahul Sen as User
-            - Create Rahul Sen as Admin
-            - Create Rahul Sen as DemoAdmin
-            - Create Rahul Sen as Admin with email rahul@gmail.com
+        - User
+        - PowerUser
+        - Admin
 
-            If the request is NOT clearly asking to create a user,
-            return:
+        Any other role is invalid.
 
+        VALID REQUESTS
+
+        Examples:
+
+        - Create Rahul Sen
+        - Create Rahul Sen as User
+        - Create Rahul Sen as PowerUser
+        - Create Rahul Sen as Admin
+        - Create Rahul Sen as Admin with email rahul@gmail.com
+
+        INVALID REQUESTS
+
+        Examples:
+
+        - Create Rahul Sen as SystemAdministrator
+        - Create Rahul Sen as SuperAdmin
+        - Create Rahul Sen as Manager
+        - Create Rahul Sen as Owner
+
+        For any invalid role, return:
+
+        {
+          "steps": []
+        }
+
+        If the request is NOT clearly asking to create a user,
+        return:
+
+        {
+          "steps": []
+        }
+
+        IMPORTANT RULES
+
+        1. Extract information ONLY from the user's request.
+        2. Never invent information.
+        3. If Email is not provided, use "".
+        4. If Password is not provided, use "".
+        5. If PhoneNumber is not provided, use "".
+        6. If LastName is not provided, use "".
+        7. Username may be derived from the user's name.
+        8. CreateUser must always be step 1.
+        9. The only valid role names are:
+           - User
+           - PowerUser
+           - Admin
+        10. If any other role is requested, return:
             {
               "steps": []
             }
+        11. AssignRole may only appear after CreateUser.
+        12. Generate AssignRole only for:
+            - Admin
+            - PowerUser
+        13. If the requested role is User, generate only CreateUser.
+        14. AssignRole parameters must contain ONLY:
+            {
+              "RoleName": ""
+            }
 
-            IMPORTANT RULES
+        CreateUser schema:
 
-            1. Extract information ONLY from the user's request.
-            2. Never invent information.
-            3. If Email is not provided, use "".
-            4. If Password is not provided, use "".
-            5. If PhoneNumber is not provided, use "".
-            6. If LastName is not provided, use "".
-            7. Username may be derived from the user's name.
-            8. CreateUser must always be step 1.
-            9. AssignRole may only appear after CreateUser.
-            10. AssignRole is only allowed for Admin or DemoAdmin.
-            11. For User role, do not generate AssignRole.
-            12. AssignRole parameters must contain ONLY:
-                {
-                  "RoleName": ""
-                }
+        {
+          "stepNumber": 1,
+          "action": "CreateUser",
+          "description": "",
+          "parameters": {
+            "FirstName": "",
+            "LastName": "",
+            "Email": "",
+            "Username": "",
+            "Password": "",
+            "PhoneNumber": ""
+          }
+        }
 
-            CreateUser schema:
+        AssignRole schema:
 
+        {
+          "stepNumber": 2,
+          "action": "AssignRole",
+          "description": "",
+          "parameters": {
+            "RoleName": "Admin"
+          }
+        }
+
+        Example Input:
+
+        Create Rahul Sen as Admin
+
+        Example Output:
+
+        {
+          "steps": [
             {
               "stepNumber": 1,
               "action": "CreateUser",
-              "description": "",
+              "description": "Create Rahul Sen user",
               "parameters": {
-                "FirstName": "",
-                "LastName": "",
+                "FirstName": "Rahul",
+                "LastName": "Sen",
                 "Email": "",
-                "Username": "",
+                "Username": "rahul.sen",
                 "Password": "",
                 "PhoneNumber": ""
               }
-            }
-
-            AssignRole schema:
-
+            },
             {
               "stepNumber": 2,
               "action": "AssignRole",
-              "description": "",
+              "description": "Assign Admin role",
               "parameters": {
                 "RoleName": "Admin"
               }
             }
+          ]
+        }
 
-            Example Input:
+        Example Input:
 
-            Create Rahul Sen as Admin
+        Create Rahul Sen as User
 
-            Example Output:
+        Example Output:
 
+        {
+          "steps": [
             {
-              "steps": [
-                {
-                  "stepNumber": 1,
-                  "action": "CreateUser",
-                  "description": "Create Rahul Sen user",
-                  "parameters": {
-                    "FirstName": "Rahul",
-                    "LastName": "Sen",
-                    "Email": "",
-                    "Username": "rahul.sen",
-                    "Password": "",
-                    "PhoneNumber": ""
-                  }
-                },
-                {
-                  "stepNumber": 2,
-                  "action": "AssignRole",
-                  "description": "Assign Admin role",
-                  "parameters": {
-                    "RoleName": "Admin"
-                  }
-                }
-              ]
+              "stepNumber": 1,
+              "action": "CreateUser",
+              "description": "Create Rahul Sen user",
+              "parameters": {
+                "FirstName": "Rahul",
+                "LastName": "Sen",
+                "Email": "",
+                "Username": "rahul.sen",
+                "Password": "",
+                "PhoneNumber": ""
+              }
             }
+          ]
+        }
 
-            User Request:
+        Example Input:
 
-            {{userPrompt}}
-            """;
+        Create Rahul Sen as Manager
+
+        Example Output:
+
+        {
+          "steps": []
+        }
+
+        User Request:
+
+        {{userPrompt}}
+        """;
     }
 
     private static void ValidatePlan(AgentPlanDto plan)
@@ -346,7 +415,7 @@ public class GeminiPlannerService : IAiPlannerService
         var validRoles = new[]
         {
         "Admin",
-        "DemoAdmin"
+        "SystemAdministrator"
     };
 
         if (!validRoles.Contains(

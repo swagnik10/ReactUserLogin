@@ -13,9 +13,10 @@ import UserManagement from "../pages/admin/UserManagement";
 import MainLayout from "../layouts/MainLayout";
 import AdminLayout from "../layouts/AdminLayout";
 import NotFound from "../pages/notfound/NotFound";
-import Settings from "../pages/admin/Settings";
+import Analysis from "../pages/admin/AiAnalysis";
 import Roles from "../pages/admin/Roles";
 import AgentWorkspace from "../pages/admin/AgentWorkspace";
+import AIAudit from "../pages/admin/AIAudit";
 import { ROUTE_PATHS } from "./routePaths";
 
 const AppRoutes = () => {
@@ -39,11 +40,12 @@ const AppRoutes = () => {
       {/* Admin */}
       <Route element={<AdminRoute />}>
         <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<UserManagement />} />
-          <Route path="/admin/roles" element={<Roles />} />
-          <Route path="/admin/settings" element={<Settings />} />
-          <Route path="/user/:id" element={<UserDetails />} />
+          <Route path={ROUTE_PATHS.ADMIN} element={<AdminDashboard />} />
+          <Route path={ROUTE_PATHS.ADMIN_USERS} element={<UserManagement />} />
+          <Route path={ROUTE_PATHS.ADMIN_ROLES} element={<Roles />} />
+          <Route path={ROUTE_PATHS.ADMIN_AI_ANALYSIS}element={<Analysis />} />
+          <Route path={ROUTE_PATHS.USER_DETAILS}element={<UserDetails />} />
+          <Route path={ROUTE_PATHS.ADMIN_AI_AUDIT}element={<AIAudit />} />
           <Route path={ROUTE_PATHS.AGENT_WORKSPACE} element={<AgentWorkspace />}/>
         </Route>
       </Route>

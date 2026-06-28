@@ -1,4 +1,5 @@
 ﻿using Backend.Application.CommandAndQuery;
+using Backend.Authorization;
 using Backend.DTOs.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,7 @@ namespace Backend.Controllers
             _mediator = mediator;
         }
 
-        [Authorize(Roles = "Admin,DemoAdmin")]
+        [HasPermission(Permissions.Users.View)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -32,7 +33,7 @@ namespace Backend.Controllers
             return Ok(users);
         }
 
-        [Authorize(Roles = "Admin,DemoAdmin")]
+        [HasPermission(Permissions.Users.View)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -42,7 +43,7 @@ namespace Backend.Controllers
             return Ok(user);
         }
 
-        [Authorize(Roles = "Admin")]
+        [HasPermission(Permissions.Users.Edit)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateUserBody request)
         {
@@ -55,7 +56,7 @@ namespace Backend.Controllers
             });
         }
 
-        [Authorize(Roles = "Admin")]
+        [HasPermission(Permissions.Users.Delete)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -68,7 +69,7 @@ namespace Backend.Controllers
             });
         }
 
-        [Authorize(Roles = "Admin")]
+        [HasPermission(Permissions.Users.AssignRole)]
         [HttpPut("{id}/role")]
         public async Task<IActionResult> UpdateRole(int id, UpdateUserRoleBody request)
         {
