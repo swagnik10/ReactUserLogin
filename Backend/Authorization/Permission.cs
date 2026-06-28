@@ -27,6 +27,7 @@ public static class Permissions
     {
         public const string Execute = "AI.Execute";
         public const string Audit = "AI.Audit";
+        public const string AiFun = "AI.Fun";
     }
 
     public static IEnumerable<string> All =>
@@ -44,6 +45,7 @@ public static class Permissions
         Settings.Edit,
 
         AI.Execute,
-        AI.Audit
+        AI.Audit,
+        AI.AiFun
     ];
 }

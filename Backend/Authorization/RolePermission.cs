@@ -7,13 +7,15 @@ public static class RolePermissions
         {
             [Roles.User] =
             [
-                Permissions.Users.View
+                Permissions.Users.View,
+                Permissions.AI.AiFun
             ],
 
             [Roles.PowerUser] =
             [
                 Permissions.Users.View,
-                Permissions.Users.Edit
+                Permissions.Users.Edit,
+                Permissions.AI.AiFun
             ],
 
             [Roles.Admin] =

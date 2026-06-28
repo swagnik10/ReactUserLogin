@@ -1,5 +1,6 @@
 using Backend.Application.Agents;
 using Backend.Application.AI;
+using Backend.Application.AI.AiFun;
 using Backend.Application.Service;
 using Backend.Application.Services;
 using Backend.Authorization;
@@ -79,6 +80,7 @@ builder.Services.AddHttpClient<IAiRoleAnalyzerService, GeminiRoleAnalyzerService
 builder.Services.AddHttpClient<IAiRoleComparerService, GeminiRoleComparerService>();
 builder.Services.AddHttpClient<IAiRbacAuditService, GeminiRbacAuditService>();
 builder.Services.AddHttpClient<IAiRbacAssistantService, GeminiRbacAssistantService>();
+builder.Services.AddHttpClient<IAiUserFunService, GeminiUserFunService>();
 
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 
