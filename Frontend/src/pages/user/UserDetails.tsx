@@ -178,7 +178,8 @@ const UserDetails = () => {
             </label>
             <p>{user.username}</p>
           </div>
-
+          
+          {user.role !== "SystemAdministrator" && (
           <div>
             <label className="mb-1 block font-medium">
               Role
@@ -199,6 +200,10 @@ const UserDetails = () => {
                 <option value="Admin">
                   Admin
                 </option>
+
+                <option value="Admin">
+                  PowerUser
+                </option>
               </select>
 
               <button
@@ -208,7 +213,7 @@ const UserDetails = () => {
                 Update Role
               </button>
             </div>
-          </div>
+          </div>)}
 
           {/* Email */}
           <div>

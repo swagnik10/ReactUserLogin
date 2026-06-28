@@ -19,8 +19,6 @@ public static class RolePermissions
             [Roles.Admin] =
             [
                 Permissions.Users.View,
-                Permissions.Users.Edit,
-                Permissions.Users.Delete,
                 Permissions.Users.AssignRole,
                 Permissions.Roles.View,
                 Permissions.AI.Audit,

@@ -9,6 +9,7 @@ import type {
 } from "../../features/auth/types/agent";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { isValidEmail, isValidPassword, isValidPhoneNumber, isValidUsername } from "../../utils/validators";
 
 const AgentWorkspace = () => {
     const [prompt, setPrompt] = useState("");
@@ -65,6 +66,32 @@ const AgentWorkspace = () => {
 
     const handleExecute = async () => {
         if (!plan) return;
+
+        for (const step of plan.steps) {
+            if (step.action !== "CreateUser") {
+                continue;
+            }
+
+            const requiredFields = [
+                "FirstName",
+                "LastName",
+                "PhoneNumber",
+                "Email",
+                "Username",
+                "Password",
+            ];
+
+            for (const field of requiredFields) {
+                const value = step.parameters[field] ?? "";
+
+                const error = getValidationError(field, value);
+
+                if (error) {
+                    toast.error(`${field}: ${error}`);
+                    return;
+                }
+            }
+        }
 
         try {
             setLoading(true);
@@ -179,6 +206,43 @@ const AgentWorkspace = () => {
         }
     };
 
+    const getValidationError = (
+        key: string,
+        value: string
+    ): string | null => {
+        switch (key) {
+            case "FirstName":
+                return value.trim() ? null : "First name is required";
+
+            case "LastName":
+                return value.trim() ? null : "Last name is required";
+
+            case "Email":
+                return isValidEmail(value)
+                    ? null
+                    : "Enter a valid email";
+
+            case "Username":
+                return isValidUsername(value)
+                    ? null
+                    : "Username must be at least 3 characters";
+
+            case "Password":
+                return isValidPassword(value)
+                    ? null
+                    : "Password must be at least 6 characters";
+
+            case "PhoneNumber":
+                return isValidPhoneNumber(value)
+                    ? null
+                    : "Phone number must be 10 digits";
+
+            default:
+                return null;
+        }
+    };
+
+
     return (
         <div className="space-y-6">
             <h1 className="text-2xl font-bold">
@@ -230,6 +294,11 @@ const AgentWorkspace = () => {
                                     const isEmail =
                                         key.toLowerCase() === "email";
 
+                                    const error =
+                                        typeof value === "string"
+                                            ? getValidationError(key, value)
+                                            : null;
+
                                     return (
                                         <div
                                             key={key}
@@ -258,7 +327,10 @@ const AgentWorkspace = () => {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="flex-1 border rounded p-2"
+                                                    className={`flex-1 rounded p-2 border ${error
+                                                        ? "border-red-500"
+                                                        : "border-gray-300"
+                                                        }`}
                                                 />
 
                                                 {isPassword && (
@@ -336,7 +408,7 @@ const AgentWorkspace = () => {
                     <button
                         onClick={handleExecute}
                         disabled={loading || !canExecute()}
-                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
+                        className="cursor-pointer mt-4 px-4 py-2 bg-green-600 text-white rounded "
                     >
                         Execute Plan
                     </button>
